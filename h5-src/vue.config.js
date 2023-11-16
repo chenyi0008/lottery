@@ -10,7 +10,7 @@ module.exports = defineConfig({
     hot: true,
     proxy:{
       '/api': {
-        target: 'http://116.62.213.90',
+        target: 'http://116.62.213.90', // 接口代理地址 本地调试时需更换至接口对应地址
         changeOrigin: true,
         pathRewrite: {
           '/^api': 'api/'

@@ -24,7 +24,7 @@ import { List } from 'vant';
   },
 })
 export default class HomeView extends Vue {
-
+  imgPath:string = process.env.VUE_APP_PATH
   loading = false
   finished = false
   total = 0
