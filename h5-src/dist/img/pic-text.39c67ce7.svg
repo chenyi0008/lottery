@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="127px" height="79px" viewBox="0 0 127 79" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>登录文案</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="登录" transform="translate(-32.000000, -88.000000)" fill="#FFFFFF">
+            <g id="登录文案" transform="translate(32.000000, 88.000000)">
+                <text id="Hello！" font-family="Arial-Black, Arial Black" font-size="33" font-weight="700">
+                    <tspan x="0" y="36">Hello</tspan>
+                    <tspan x="93.4892578" y="36" font-family="PingFangSC-Semibold, PingFang SC" font-weight="500">！</tspan>
+                </text>
+                <text id="快来登录吧" font-family="PingFangSC-Semibold, PingFang SC" font-size="23" font-weight="500">
+                    <tspan x="0" y="71">快来登录吧</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

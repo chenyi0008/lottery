@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>箭头@2x</title>
+    <g id="页面-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="登录" transform="translate(-10.000000, -56.000000)">
+            <g id="NavigationBar_左侧内容/白色/返回" transform="translate(0.000000, 44.000000)">
+                <g id="编组" transform="translate(10.000000, 12.000000)">
+                    <rect id="矩形" fill="#FFFFFF" opacity="0" x="0" y="0" width="20" height="20"></rect>
+                    <g transform="translate(4.000000, 0.000000)" id="icon/chevron箭头/大号/朝左" stroke="#FFFFFF" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                        <g>
+                            <polyline id="路径" points="9.5 3 2.5 10 9.5 17"></polyline>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
