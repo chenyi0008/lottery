@@ -1,0 +1,13 @@
+FROM daocloud.io/library/java:openjdk-8u40-jdk
+#语言字符，解决乱码问题
+ENV LC_ALL C.UTF-8
+ENV LANG C.UTF-8
+ENV LANGUAGE C.UTF-8
+#时区及时间，不设置会影响活动的开始结束
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+#将springboot的jar包打入镜像
+COPY msg-0.0.1-SNAPSHOT.jar /opt/ROOT.jar
+WORKDIR /opt
+#启动命令，注意环境配置 prod
+CMD ["java", "-jar", "ROOT.jar", "--spring.profiles.active=prod"]

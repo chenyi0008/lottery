@@ -1,0 +1,51 @@
+
+<#include "/common/head.html"/>
+
+
+ <div class="easyui-panel detailPage" data-options="fit:true,border:false">
+    <form id="ff" class="easyui-form" method="post">
+        <table class="table1">
+            <tr>
+           		<th><span id="uname_label">用户名：</span></th>
+	               	<td><span class="valueSpan">${model.uname!''}</span></td>
+            <tr>
+           		<th><span id="pic_label">头像：</span></th>
+           			<td><div class="valueSpan image_pre"><img src="${model.pic!''}"></div></td>
+            </tr>
+            <tr>
+           		<th><span id="realname_label">姓名：</span></th>
+	               	<td><span class="valueSpan">${model.realname!''}</span></td>
+            </tr>
+            <tr>
+           		<th><span id="idcard_label">身份证号：</span></th>
+	               	<td><span class="valueSpan">${model.idcard!''}</span></td>
+            </tr>
+            <tr>
+           		<th><span id="phone_label">手机号码：</span></th>
+	               	<td><span class="valueSpan">${model.phone!''}</span></td>
+            </tr>
+            <tr>
+           		<th><span id="level_label">等级：</span></th>
+	               	<td><span class="valueSpan">${model.level!''}</span></td>
+            </tr>
+            <tr>
+           		<th><span id="createtime_label">注册时间：</span></th>
+	               	<td><span class="valueSpan">${model.createtime!''}</span></td>
+            </tr>
+            <tr>
+           		<th><span id="updatetime_label">更新时间：</span></th>
+	               	<td><span class="valueSpan">${model.updatetime!''}</span></td>
+            </tr>
+           	
+        </table>
+    </form>
+</div>
+<script>
+top.window.subPage.save = save;
+function save() {
+	top.window.closeWindow();
+}
+
+//扩展js
+</script>
+<#include "/common/foot.html"/>

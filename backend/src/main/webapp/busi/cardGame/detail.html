@@ -1,0 +1,63 @@
+
+<#include "/common/head.html"/>
+
+<style>
+    tr{border-bottom:1px solid #ccc;}
+</style>
+ <div class="easyui-panel detailPage" data-options="fit:true,border:false">
+    <form id="ff" class="easyui-form" method="post">
+        <table class="table1">
+            <tr>
+           		<th><span id="title_label">活动主题：</span></th>
+	               	<td><span class="valueSpan"><pre>${model.title!''}</pre></span></td>
+            <tr>
+           		<th><span id="info_label">活动简介：</span></th>
+	               	<td><span class="valueSpan">${model.info!''}</span></td>
+            </tr>
+            <tr>
+           		<th><span id="starttime_label">开始时间：</span></th>
+	               	<td><span class="valueSpan"><pre>${model.starttime!''}</pre></span></td>
+            </tr>
+            <tr>
+           		<th><span id="endtime_label">结束时间：</span></th>
+	               	<td><span class="valueSpan"><pre>${model.endtime!''}</pre></span></td>
+            </tr>
+            <tr>
+           		<th><span id="type_label">类型：</span></th>
+	               	<td><span class="valueSpan"><pre>${model.type!''}</pre></span></td>
+            </tr>
+            <tr>
+           		<th><span id="type_label2">奖品：</span></th>
+	               	<td><span class="valueSpan">
+                        <table class="table1">
+                            <thead><td>奖品名称</td><td>数量</td></thead>
+                        <#list products as p>
+                            <tr><td>${p.name}</td><td>${p.amount}</td></tr>
+                        </#list>
+                        </table>
+                    </span></td>
+            </tr>
+            <tr>
+           		<th><span id="type_label3">策略：</span></th>
+	               	<td><span class="valueSpan">
+                        <table class="table1">
+                            <thead><td>会员级别</td><td>最大抽奖数</td><td>最大中奖数</td></thead>
+                        <#list rules as p>
+                            <tr><td>${p.level_name}</td><td>${p.enter_times}</td><td>${p.goal_times}</td></tr>
+                        </#list>
+                        </table>
+                    </span></td>
+            </tr>
+
+        </table>
+    </form>
+</div>
+<script>
+top.window.subPage.save = save;
+function save() {
+	top.window.closeWindow();
+}
+
+//扩展js
+</script>
+<#include "/common/foot.html"/>

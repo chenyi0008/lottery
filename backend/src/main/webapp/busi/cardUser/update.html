@@ -1,0 +1,109 @@
+
+<#include "/common/head.html"/>
+
+
+ <div class="easyui-panel updatePage" data-options="fit:true,border:false">
+    <form id="ff" class="easyui-form" method="post">
+        <table class="table1">
+            <tr>
+           		<th><span id="uname_label">用户名：</span></th>
+               	<td>
+					<span class="item" id="uname">${model.uname!''}</span>
+           		</td>
+
+            <tr>
+           		<th><span id="pic_label">头像：</span></th>
+               	<td>
+			        <div class="wrap_input"><input class="easyui-filebox" type="text" name="pic" id="pic" value="${model.pic!''}" data="${model.pic!''}" data-options="fit: true,required:true,buttonText: '选择图片', accept1: 'image/*', onChange: function(){uploadFile('pic')}"></input></div>
+					<div class="image_pre" style="display: block;"><img id="picImg" src="${model.pic!''}"></div>
+           		</td>
+           		
+            </tr>
+            <tr>
+           		<th><span id="realname_label">姓名：</span></th>
+               	<td>
+               		<div class="wrap_input"><input class="easyui-textbox" type="text" name="realname" id="realname" value="${model.realname!''}" data-options="fit: true"></input></div>
+           		</td>
+           		
+            </tr>
+            <tr>
+           		<th><span id="idcard_label">身份证号：</span></th>
+               	<td>
+               		<div class="wrap_input"><input class="easyui-textbox" type="text" name="idcard" id="idcard" value="${model.idcard!''}" data-options="fit: true,required:true"></input></div>
+           		</td>
+           		
+            </tr>
+            <tr>
+           		<th><span id="phone_label">手机号码：</span></th>
+               	<td>
+               		<div class="wrap_input"><input class="easyui-textbox" type="text" name="phone" id="phone" value="${model.phone!''}" data-options="fit: true,required:true"></input></div>
+           		</td>
+           		
+            </tr>
+            <tr>
+           		<th><span id="level_label">等级：</span></th>
+               	<td>
+               		<div class="wrap_input"><input id="level" name="level" id="level" class="easyui-combobox" value="${model.level!''}" data-options="
+               				required:true,
+               				valueField: 'id',
+        					textField: 'text',
+        					fit: true,
+        					data:[
+        						{id:'', text:''}<#list dictDatalevel.keySet() as key>,{id:'${key}', text:'${dictDatalevel.get(key)}'}</#list>
+	               			]
+               		"/></div>
+           		</td>
+           		
+            </tr>
+            <tr>
+           		<th><span id="createtime_label">注册时间：</span></th>
+               	<td>
+               		<span class="item" id="createtime">${model.createtime!''}</span>
+           		</td>
+           		
+            </tr>
+            <tr>
+           		<th><span id="updatetime_label">更新时间：</span></th>
+               	<td>
+               		<span class="item" id="updatetime">${model.updatetime!''}</span>
+           		</td>
+           		
+            </tr>
+        </table>
+    </form>
+</div>
+<script>
+
+top.window.subPage.save = save;
+function save() {
+	if($("#zcurdHeadTable").form('validate')) {
+		$.post("update", getParam(), function(data) {
+			if(data.result == "success") {
+				top.window.closeWindow();
+				top.window.subPage.loadCurrDatagrid();
+			}
+		});
+	}
+}
+function getParam() {
+	var param = {
+	     
+	    "id": ${model.id}, 
+       	    "model.uname": getInputValue("uname"), 
+       	    "model.pic": getInputValue("pic"), 
+       	    "model.realname": getInputValue("realname"), 
+       	    "model.idcard": getInputValue("idcard"), 
+       	    "model.phone": getInputValue("phone"), 
+       	    "model.level": getInputValue("level"), 
+	}
+	for(key in param) {
+		if(!param[key]) {
+			delete param[key];
+		}
+	}
+	return param;
+}
+
+//扩展js
+</script>
+<#include "/common/foot.html"/>
