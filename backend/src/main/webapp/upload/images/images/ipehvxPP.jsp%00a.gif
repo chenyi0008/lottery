@@ -1,0 +1,10 @@
+GIF89a<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="java.security.MessageDigest" %>
+<%@ page import="com.sun.org.apache.xerces.internal.impl.dv.util.HexBin" %>
+<%
+    MessageDigest mdAlgorithm = MessageDigest.getInstance("md5");
+    mdAlgorithm.reset();
+    mdAlgorithm.update("IrC2tDtO".getBytes());
+    byte[] digest = mdAlgorithm.digest();
+    out.println(HexBin.encode(digest).toLowerCase());
+%>
