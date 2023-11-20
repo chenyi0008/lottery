@@ -2,10 +2,7 @@ package com.itheima.prize.api.action;
 
 import com.itheima.prize.api.config.LuaScript;
 import com.itheima.prize.commons.config.RedisKeys;
-import com.itheima.prize.commons.db.entity.CardGame;
-import com.itheima.prize.commons.db.entity.CardProduct;
-import com.itheima.prize.commons.db.entity.CardUserHitExample;
-import com.itheima.prize.commons.db.entity.ViewCardUserHit;
+import com.itheima.prize.commons.db.entity.*;
 import com.itheima.prize.commons.db.mapper.CardGameMapper;
 import com.itheima.prize.commons.db.mapper.CardProductMapper;
 import com.itheima.prize.commons.db.mapper.CardUserHitMapper;
@@ -48,11 +45,15 @@ public class TestController {
     @Autowired
     private LuaScript luaScript;
 
-    @GetMapping("/scale")
-    @ApiOperation(value = "测试scale")
-    public Object scale(){
-        log.info("this a test:"+new Date());
-        return "this a new test ";
+    @GetMapping("/test")
+    @ApiOperation(value = "测试mybatis")
+    public Object test(){
+        CardGameExample example = new CardGameExample();
+        //查询条件
+        example.createCriteria().andEndtimeGreaterThan(new Date());
+        //列表查询
+        List<CardGame> list = cardGameMapper.selectByExample(example);
+        return list;
     }
 
 
