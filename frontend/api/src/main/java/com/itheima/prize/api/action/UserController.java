@@ -38,7 +38,7 @@ public class UserController {
     @ApiOperation(value = "用户信息")
     public ApiResult info(HttpServletRequest request) {
         HttpSession session = request.getSession();
-        CardUser user = (CardUser) redisUtil.get(RedisKeys.SESSIONID+session.getId());
+        CardUser user = (CardUser) session.getAttribute("user");
         if (user == null){
             return new ApiResult(0, "登录超时",null);
         }else {
@@ -58,12 +58,9 @@ public class UserController {
     })
     public ApiResult hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit,HttpServletRequest request) {
         HttpSession session = request.getSession();
-        Integer userid = (Integer) session.getAttribute("loginUserId");
-        if (userid == null){
-            return new ApiResult(0, "登录超时",null);
-        }
+        CardUser user = (CardUser) session.getAttribute("user");
         ViewCardUserHitExample example = new ViewCardUserHitExample();
-        ViewCardUserHitExample.Criteria criteria = example.createCriteria().andUseridEqualTo(userid);
+        ViewCardUserHitExample.Criteria criteria = example.createCriteria().andUseridEqualTo(user.getId());
         if (gameid != -1){
             criteria.andGameidEqualTo(gameid);
         }

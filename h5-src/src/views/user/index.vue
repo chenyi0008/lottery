@@ -78,7 +78,7 @@ export default class User extends Vue {
           const { data } = res.data
           data.pic = process.env.VUE_APP_PATH + data.pic
           this.userInfo = data
-          this.loadFlag = true
+          
 
           this.getPrizeList()
         } else { 
@@ -102,6 +102,7 @@ export default class User extends Vue {
           if(data.totalNum && data.items.length > 0){
             // 接口数据处理，倒序显示最新奖品
             this.prizeList = data.items
+            this.loadFlag = true
           }
         }
       })

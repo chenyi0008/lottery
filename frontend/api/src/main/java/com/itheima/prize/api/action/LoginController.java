@@ -48,9 +48,7 @@ public class LoginController {
             user.setPasswd(null);
             user.setIdcard(null);
             HttpSession session = request.getSession();
-            session.setAttribute("loginUserId", user.getId());
-            redisUtil.set("loginUser:" + user.getId(), session.getId());
-            redisUtil.set(RedisKeys.SESSIONID+session.getId(),user);
+            session.setAttribute("user",user);
             return new ApiResult(1, "登录成功",user);
         } else {
             //错误计数，5次锁定5分钟
@@ -65,7 +63,6 @@ public class LoginController {
     public ApiResult logout(HttpServletRequest request){
         HttpSession session = request.getSession();
         if (session != null){
-            redisUtil.del("loginUser:" +  session.getAttribute("loginUserId"));
             session.invalidate();
         }
         return new ApiResult(1, "退出成功",null);

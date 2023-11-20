@@ -59,7 +59,7 @@ public class ActController {
         }
         //获取当前用户
         HttpSession session = request.getSession();
-        CardUser user = (CardUser) redisUtil.get(RedisKeys.SESSIONID+session.getId());
+        CardUser user = (CardUser) session.getAttribute("user");
         if (user == null){
             return new ApiResult(-1,"未登陆",null);
         }else{
@@ -178,7 +178,7 @@ public class ActController {
                 break;
 
             default:
-                return new ApiResult(0,"不支持的活动类型",null);
+                return new ApiResult(-1,"不支持的活动类型",null);
 
         }//end switch
 

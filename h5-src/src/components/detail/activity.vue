@@ -32,6 +32,7 @@
 <script lang="ts">
 import axios from 'axios';
 import { Vue, Prop, Component } from 'vue-property-decorator';
+import { Toast } from 'vant';
 
 @Component
 export default class Activity extends Vue {
@@ -139,40 +140,53 @@ export default class Activity extends Vue {
 
   // 领取奖品
   receiveFun(item: any, event: any){
-
- 
     axios
       .get(
         `act/go/${this.$route.query.id}`,
       )
       .then((res: any) => {
-        if (res.data.code === 1) {
-          const { data } = res.data
-          // 用户已登录
-          const receiveDom = event.target
-          receiveDom.style.animation = ''
-          const gameCont = document.getElementsByClassName('game-cont')[0]
-          const newDom = document.createElement("div")
-          newDom.className = 'receive-tips'
-          newDom.style.top = receiveDom.offsetTop + 'px'
-          newDom.style.left = receiveDom.offsetLeft + 'px'
-          newDom.innerHTML = data.name
-          gameCont.appendChild(newDom)
-
-          setTimeout(()=>{
-            gameCont.removeChild(newDom)
-          }, 1000)
+        const { data, code, msg } = res.data
+        if (code === 1) {
+          // 用户已登录， 且中奖
+          this.hasPrizeFun(data, event.target, true)
+          this.gameList = this.gameList.filter((v1: any) => {
+            return v1.id !== item.id
+          })
+        } else if (code === 0){
+          // 未中奖
+          this.hasPrizeFun(data, event.target, false)
           this.gameList = this.gameList.filter((v1: any) => {
             return v1.id !== item.id
           })
         } else { 
-          // 未登录，跳转登录
-          this.$router.push({
-            name: 'login'
-          })
+          // 其他情况，toast提示
+          Toast(msg);
         }
       })
   }
+
+  // 是否中奖
+  hasPrizeFun(data: any, receiveDom: any, flag: boolean){
+    receiveDom.style.animation = ''
+    const gameCont = document.getElementsByClassName('game-cont')[0]
+    const newDom = document.createElement("div")
+    if(flag){
+      newDom.className = 'receive-tips'
+      newDom.innerHTML = data.name
+    } else {
+      newDom.className = 'receive-tips not-receive-tips'
+      newDom.innerHTML = ''
+    }
+    newDom.style.top = receiveDom.offsetTop + 'px'
+    newDom.style.left = receiveDom.offsetLeft + 'px'
+    gameCont.appendChild(newDom)
+
+    setTimeout(()=>{
+      gameCont.removeChild(newDom)
+    }, 1000)
+
+  }
+
 
   // 倒计时逻辑
   countdownFun(){
@@ -285,30 +299,38 @@ export default class Activity extends Vue {
       }
     }
 
-    ::v-deep .receive-tips{
-      position: absolute;
-      z-index: 1;
-      animation-name: receivetTips;
-      animation-timing-function: ease-out;
-      animation-duration: 1s;
-      animation-fill-mode: forwards;
-      font-family: SourceHanSansCN-Bold;
-      font-size: 32px;
-      font-weight: normal;
-      font-stretch: normal;
-      line-height: 32px;
-      letter-spacing: 0px;
-      color: #fff2e5;
-      width: 260px;
-      height: 80px;
-      padding: 23px 51px 0 17px;
-      box-sizing: border-box;
-      background-image: url(../../assets/detail/receice-tips.png);
-      background-size: 100% 100%;
-      text-align: center;
-      text-overflow:ellipsis;  
-      overflow: hidden;  
-      white-space: nowrap;
+    ::v-deep {
+      .receive-tips{
+        position: absolute;
+        z-index: 1;
+        animation-name: receivetTips;
+        animation-timing-function: ease-out;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+        font-family: SourceHanSansCN-Bold;
+        font-size: 32px;
+        font-weight: normal;
+        font-stretch: normal;
+        line-height: 32px;
+        letter-spacing: 0px;
+        color: #fff2e5;
+        width: 260px;
+        height: 80px;
+        padding: 23px 51px 0 17px;
+        box-sizing: border-box;
+        background-image: url(../../assets/detail/receice-tips.png);
+        background-size: 100% 100%;
+        text-align: center;
+        text-overflow:ellipsis;  
+        overflow: hidden;  
+        white-space: nowrap;
+      }
+
+      .not-receive-tips{
+        width: 272px;
+        height: 58px;
+        background-image: url(../../assets/detail/not-receice-tips.png);
+      }
     }
 
     @keyframes receivetTips {

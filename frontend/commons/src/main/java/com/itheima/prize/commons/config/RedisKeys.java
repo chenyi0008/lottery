@@ -14,9 +14,6 @@ public class RedisKeys {
     //中奖概率
     public final static String RANDOMRATE="game_randomrate_";
 
-    //redis session
-    public final static String SESSIONID="user_sessionid_";
-
     //用户中奖数
     public final static String USERHIT="user_hit_";
     //用户参与次数
