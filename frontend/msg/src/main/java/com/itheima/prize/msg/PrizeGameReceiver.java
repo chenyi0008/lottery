@@ -1,5 +1,6 @@
 package com.itheima.prize.msg;
 
+import com.alibaba.fastjson.JSON;
 import com.itheima.prize.commons.config.RabbitKeys;
 import com.itheima.prize.commons.db.entity.CardUserGame;
 import com.itheima.prize.commons.db.mapper.CardUserGameMapper;
@@ -20,9 +21,9 @@ public class PrizeGameReceiver {
     private CardUserGameMapper cardUserGameMapper;
 
     @RabbitHandler
-    public void processMessage3(CardUserGame message) {
-        logger.info("user play : game={},user={},time={} " , message.getGameid(),message.getUserid(),message.getCreatetime());
-        cardUserGameMapper.insert(message);
+    public void processMessage(String message) {
+        logger.info("user play : msg={}" , message);
+        cardUserGameMapper.insert( JSON.parseObject(message,CardUserGame.class));
     }
 
 }

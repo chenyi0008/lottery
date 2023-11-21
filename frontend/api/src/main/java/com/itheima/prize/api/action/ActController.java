@@ -1,11 +1,11 @@
 package com.itheima.prize.api.action;
 
+import com.alibaba.fastjson.JSON;
 import com.itheima.prize.api.config.LuaScript;
 import com.itheima.prize.commons.config.RabbitKeys;
 import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.*;
 import com.itheima.prize.commons.db.mapper.CardGameMapper;
-import com.itheima.prize.commons.db.mapper.CardUserGameMapper;
 import com.itheima.prize.commons.utils.ApiResult;
 import com.itheima.prize.commons.utils.RedisUtil;
 import io.swagger.annotations.Api;
@@ -71,7 +71,7 @@ public class ActController {
                 userGame.setUserid(user.getId());
                 userGame.setGameid(gameid);
                 userGame.setCreatetime(new Date());
-                rabbitTemplate.convertAndSend(RabbitKeys.QUEUE_PLAY,userGame);
+                rabbitTemplate.convertAndSend(RabbitKeys.EXCHANGE_DIRECT,RabbitKeys.QUEUE_PLAY, JSON.toJSONString(userGame));
             }
         }
 
@@ -194,7 +194,7 @@ public class ActController {
         hit.setHittime(now);
         hit.setProductid(product.getId());
         hit.setUserid(user.getId());
-        rabbitTemplate.convertAndSend(RabbitKeys.EXCHANGE_DIRECT,RabbitKeys.QUEUE_HIT, hit);
+        rabbitTemplate.convertAndSend(RabbitKeys.EXCHANGE_DIRECT,RabbitKeys.QUEUE_HIT, JSON.toJSONString(hit));
 
         //返回给前台中奖信息
         return new ApiResult(1,"恭喜中奖",product);
