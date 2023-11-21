@@ -9,28 +9,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-	<profiles>
-		<profile>
-			<id>dev</id>
-			<properties>
-				<db.host>116.62.213.90</db.host>
-				<db.user>prize</db.user>
-				<db.pwd>prize</db.pwd>
-			</properties>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
 
-		<profile>
-			<id>prod</id>
-			<properties>
-                <db.host>172.17.0.1</db.host>
-				<db.user>prize</db.user>
-				<db.pwd>prize</db.pwd>
-			</properties>
-		</profile>
-	</profiles>
 	<dependencies>
 		<dependency>
 			<groupId>log4j</groupId>
