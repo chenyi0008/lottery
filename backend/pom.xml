@@ -25,9 +25,9 @@
 		<profile>
 			<id>prod</id>
 			<properties>
-                <db.host>127.0.0.1</db.host>
-                <db.user>root</db.user>
-                <db.pwd>root</db.pwd>
+                <db.host>172.17.0.1</db.host>
+				<db.user>prize</db.user>
+				<db.pwd>prize</db.pwd>
 			</properties>
 		</profile>
 	</profiles>
