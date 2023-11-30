@@ -22,8 +22,7 @@ services:
     image: redis:6.0.6  
     container_name: lottery-redis  
     restart: always  
-    # ports:  
-    #   - "9107:6379"  
+
   lottery-api:  
     image: api:0.0.1-SNAPSHOT  
     container_name: lottery-api  
@@ -46,6 +45,7 @@ services:
       spring.rabbitmq.port: 5672
       spring.redis.host: lottery-redis
       spring.redis.port: 6379
+
   lottery-msg:  
     image: msg:0.0.1-SNAPSHOT  
     container_name: lottery-msg  

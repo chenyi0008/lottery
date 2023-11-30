@@ -7,4 +7,4 @@ ENV LANGUAGE C.UTF-8
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 #将springboot的jar包打入镜像
-COPY ROOT.war /usr/local/tomcat/webapps/ROOT.war
+COPY ROOT /usr/local/tomcat/webapps
