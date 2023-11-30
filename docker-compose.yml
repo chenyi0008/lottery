@@ -30,6 +30,10 @@ services:
     restart: always  
     ports:  
       - "9102:9001" 
+    depends_on:  
+      - lottery-mysql  
+      - lottery-rabbitmq  
+      - lottery-redis 
     links:  
       - lottery-mysql  
       - lottery-rabbitmq  
@@ -41,7 +45,7 @@ services:
       spring.rabbitmq.host: lottery-rabbitmq
       spring.rabbitmq.port: 5672
       spring.redis.host: lottery-redis
-      spring.redis.port: 3306
+      spring.redis.port: 6379
   lottery-msg:  
     image: msg:0.0.1-SNAPSHOT  
     container_name: lottery-msg  
@@ -49,7 +53,11 @@ services:
     links:  
       - lottery-mysql  
       - lottery-rabbitmq  
-      - lottery-redis  
+      - lottery-redis 
+    depends_on:  
+      - lottery-mysql  
+      - lottery-rabbitmq  
+      - lottery-redis 
     environment:  
       spring.datasource.url: jdbc:mysql://lottery-mysql/prize?useUnicode=true&characterEncoding=utf-8  
       spring.datasource.username: prize  
@@ -57,7 +65,7 @@ services:
       spring.rabbitmq.host: lottery-rabbitmq
       spring.rabbitmq.port: 5672
       spring.redis.host: lottery-redis
-      spring.redis.port: 3306
+      spring.redis.port: 6379
     
   lottery-backend:  
     image: backend:0.0.1-SNAPSHOT  
@@ -68,6 +76,8 @@ services:
     volumes:  
       - ./backend-upload:/usr/local/tomcat/webapps/ROOT/upload  
     links:  
+      - lottery-mysql  
+    depends_on:  
       - lottery-mysql  
 
   lottery-nginx:  
@@ -82,4 +92,7 @@ services:
       - ./backend-upload:/usr/share/nginx/html/upload   
     links:  
       - lottery-api  
+    depends_on:  
+      - lottery-api  
+
    
