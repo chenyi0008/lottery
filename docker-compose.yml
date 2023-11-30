@@ -8,21 +8,20 @@ services:
       MYSQL_ROOT_PASSWORD: root  
     volumes:  
       - ./mysql-data:/var/lib/mysql  
-    ports:  
-      - "9104:3306"  
+
   lottery-rabbitmq:  
     image: rabbitmq:3.6.10-management  
     container_name: lottery-rabbitmq  
     restart: always  
     ports:  
-      - "9105:15672"  
-      - "9106:5672"  
+      - "9104:15672"  
+      # - "9106:5672"  
   lottery-redis:  
     image: redis:6.0.6  
     container_name: lottery-redis  
     restart: always  
-    ports:  
-      - "9107:6379"  
+    # ports:  
+    #   - "9107:6379"  
   lottery-api:  
     image: api:0.0.1-SNAPSHOT  
     container_name: lottery-api  
@@ -34,13 +33,13 @@ services:
       - lottery-rabbitmq  
       - lottery-redis  
     environment:  
-      spring.datasource.url: jdbc:mysql://lottery-mysql:9104/prize?useUnicode=true&characterEncoding=utf-8  
+      spring.datasource.url: jdbc:mysql://lottery-mysql/prize?useUnicode=true&characterEncoding=utf-8  
       spring.datasource.username: prize  
       spring.datasource.password: prize  
       spring.rabbitmq.host: lottery-rabbitmq
-      spring.rabbitmq.port: 9106
+      # spring.rabbitmq.port: 9106
       spring.redis.host: lottery-redis
-      spring.redis.port: 9107
+      # spring.redis.port: 9107
   lottery-msg:  
     image: msg:0.0.1-SNAPSHOT  
     container_name: lottery-msg  
