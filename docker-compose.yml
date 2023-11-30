@@ -61,7 +61,7 @@ services:
     container_name: backend  
     restart: always 
     ports:  
-      - "8080:80"       
+      - "8080:8080"       
     volumes:  
       - ./backend-upload:/usr/local/tomcat/webapps/ROOT/upload  
     links:  
@@ -72,7 +72,7 @@ services:
     container_name: nginx  
     restart: always  
     ports:  
-      - "8080:80"  
+      - "80:80"  
     volumes:  
       - ./nginx-conf:/etc/nginx/conf.d
       - ./nginx-h5:/usr/share/nginx/html
