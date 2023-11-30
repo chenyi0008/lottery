@@ -7,7 +7,9 @@ services:
     environment:  
       MYSQL_ROOT_PASSWORD: root  
     volumes:  
-      - ./mysql-data:/var/lib/mysql  
+      - ./mysql-data:/var/lib/mysql 
+    ports:  
+      - "9106:3306"  
 
   lottery-rabbitmq:  
     image: rabbitmq:3.6.10-management  
@@ -53,9 +55,9 @@ services:
       spring.datasource.username: prize  
       spring.datasource.password: prize  
       spring.rabbitmq.host: lottery-rabbitmq
-      spring.rabbitmq.port: 9106
+      # spring.rabbitmq.port: 9106
       spring.redis.host: lottery-redis
-      spring.redis.port: 9107 
+      # spring.redis.port: 9107 
     
   lottery-backend:  
     image: backend:0.0.1-SNAPSHOT  
