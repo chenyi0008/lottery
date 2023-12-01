@@ -1,28 +1,8 @@
-# ************************************************************
-# Sequel Ace SQL dump
-# 版本号： 20046
-#
-# https://sequel-ace.com/
-# https://github.com/Sequel-Ace/Sequel-Ace
-#
-# 主机: prize (MySQL 5.7.31)
-# 数据库: prize
-# 生成时间: 2023-11-19 上午3:03:37 +0000
-# ************************************************************
 
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-SET NAMES utf8mb4;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE='NO_AUTO_VALUE_ON_ZERO', SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
-GRANT ALL PRIVILEGES ON *.* TO 'user'@'%';  
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';  
 FLUSH PRIVILEGES;
 
-CREATE DATABASE lottery CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE IF NOT EXISTS lottery CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 # 转储表 card_game
 # ------------------------------------------------------------
