@@ -123,7 +123,7 @@
 						<resource>
 							<targetPath>/</targetPath>
 							<directory>${project.build.directory}</directory>
-							<include>ROOT.war</include>
+							<include>ROOT</include>
 						</resource>
 					</resources>
 				</configuration>
