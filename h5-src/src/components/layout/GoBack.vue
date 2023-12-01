@@ -6,7 +6,7 @@
 import { Vue, Component } from 'vue-property-decorator';
 
 @Component
-export default class Rule extends Vue {
+export default class GoBacks extends Vue {
   // 返回上一页
   GoBackFun () {
     if(window.history.state){

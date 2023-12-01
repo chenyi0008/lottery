@@ -1,7 +1,7 @@
 <template>
   <div class="user-page" v-show="loadFlag">
     <div class="page-cont">
-      <GoBack />
+      <GoBacks />
       <main>
         <div class="user-info" >
           <img :src="userInfo.pic" alt="">
@@ -102,8 +102,8 @@ export default class User extends Vue {
           if(data.totalNum && data.items.length > 0){
             // 接口数据处理，倒序显示最新奖品
             this.prizeList = data.items
-            this.loadFlag = true
           }
+          this.loadFlag = true
         }
       })
   }
