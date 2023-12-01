@@ -118,4 +118,5 @@ volumes:
   backend-upload:  
     driver_opts:  
       o: bind,rw
+      device: ./backend-upload
 
