@@ -116,6 +116,7 @@ networks:
         - subnet: 172.18.0.0/24  
 volumes:  
   backend-upload:  
+    type: 
     driver: local  
     driver_opts:  
       o: bind,rw 
