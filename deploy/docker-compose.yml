@@ -115,4 +115,9 @@ networks:
       config:  
         - subnet: 172.18.0.0/24  
 volumes:  
-  backend-upload:   
+  backend-upload:  
+    driver: local  
+    driver_opts:  
+      o: bind,rw 
+      device: ./backend-upload:/media
+
