@@ -1413,6 +1413,17 @@ AS SELECT
    `card_game_product`.`gameid` AS `gameid`,sum(`card_game_product`.`amount`) AS `num`
 FROM `card_game_product` group by `card_game_product`.`gameid`;
 
+# 导出视图 view_game_hitnum
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `view_game_hitnum`; DROP VIEW IF EXISTS `view_game_hitnum`;
+
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `view_game_hitnum`
+AS SELECT
+   `card_user_hit`.`gameid` AS `gameid`,count(`card_user_hit`.`id`) AS `num`
+FROM `card_user_hit` group by `card_user_hit`.`gameid`;
+
+
 # 导出视图 view_game_curinfo
 # ------------------------------------------------------------
 
@@ -1429,15 +1440,7 @@ AS SELECT
    `h`.`num` AS `hit`
 FROM (((`card_game` `g` left join `view_game_productnum` `cgp` on((`g`.`id` = `cgp`.`gameid`))) left join `view_game_hitnum` `h` on((`g`.`id` = `h`.`gameid`))) join `sys_dict` `sd2` on(((`g`.`type` = `sd2`.`dict_key`) and (`sd2`.`dict_type` = 'card_game_type'))));
 
-# 导出视图 view_game_hitnum
-# ------------------------------------------------------------
 
-DROP TABLE IF EXISTS `view_game_hitnum`; DROP VIEW IF EXISTS `view_game_hitnum`;
-
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `view_game_hitnum`
-AS SELECT
-   `card_user_hit`.`gameid` AS `gameid`,count(`card_user_hit`.`id`) AS `num`
-FROM `card_user_hit` group by `card_user_hit`.`gameid`;
 
 # 导出视图 view_card_user_hit
 # ------------------------------------------------------------
