@@ -37,7 +37,7 @@ services:
     ports:  
       - "9101:80"  
     volumes:  
-      - ./nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ./nginx.conf:/etc/nginx/conf.d/lottery.conf
       - ../h5:/usr/share/nginx/html
       - ./backend-upload:/usr/share/nginx/html/upload   
     networks:  
