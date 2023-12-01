@@ -1,2 +1,7 @@
+
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%';  
 FLUSH PRIVILEGES;
+
+CREATE DATABASE IF NOT EXISTS lottery CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+USE lottery;
