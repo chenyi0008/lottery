@@ -28,6 +28,23 @@ services:
     networks:  
       - lottery_net
 
+  lottery-minio:
+    image: minio/minio:RELEASE.2023-12-02T10-51-33Z
+    container_name: lottery-minio
+    restart: always
+    command: server /data --console-address ":9090" --address ":9000"
+    environment:
+      MINIO_ACCESS_KEY: minioadmin
+      MINIO_SECRET_KEY: minioadmin
+    volumes:
+      - ./minio-data:/data
+      - ./minio-config:/root/.minio
+    ports:
+      - "9005:9000"
+      - "9006:9090"
+    networks:
+      - lottery_net
+
   lottery-api:  
     image: api:0.0.1-SNAPSHOT  
     container_name: lottery-api  
@@ -102,7 +119,6 @@ services:
     volumes:  
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ../h5:/usr/share/nginx/html
-      - ../backend/src/main/webapp/upload:/usr/share/nginx/html/upload:rw
     depends_on:  
       - lottery-api  
     networks:  
