@@ -1,43 +1,37 @@
 package com.zcurd.common.util;
- 
-import java.io.*;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
+import java.io.*;
 import com.jfinal.kit.PropKit;
 import com.jfinal.upload.UploadFile;
 import io.minio.*;
 import io.minio.errors.*;
-import io.minio.http.Method;
-import io.minio.messages.Bucket;
-import io.minio.messages.ObjectMetadata;
 
 /**
- * @ClassName: FileUploader
- * @Author: jdh
- * @CreateTime: 2022-04-15
- * @Description: minio基本操作demo
+ * @ClassName: FileUploader - MinIO
  */
 public class FileUploader {
     // 创建客户端
     private static MinioClient minioClient = null;
     private static final String bucket = PropKit.get("minio_bucket");
     static {
-        minioClient = MinioClient.builder()
-                .endpoint(
-                        PropKit.get("minio_host"),
-                        Integer.valueOf(PropKit.get("minio_port")),false)
-                .credentials(PropKit.get("minio_username"), PropKit.get("minio_password"))
-                .build();
+        try {
+            minioClient = new MinioClient(PropKit.get("minio_host"),
+                    Integer.valueOf(PropKit.get("minio_port")),
+                    PropKit.get("minio_username"),
+                    PropKit.get("minio_password"),false);
+        } catch (InvalidEndpointException e) {
+            throw new RuntimeException(e);
+        } catch (InvalidPortException e) {
+            throw new RuntimeException(e);
+        }
+
+
         boolean found = false;
         try {
-            found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucket).build());
+            found = minioClient.bucketExists(bucket);
             if (!found) {
                 // 创建桶
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucket).build());
+                minioClient.makeBucket(bucket);
             }
             System.out.println("MinIO:bucket init ok , bucket="+bucket);
 
@@ -50,14 +44,10 @@ public class FileUploader {
         try {
             InputStream fileInputStream = fileInputStream = new FileInputStream(file.getFile());
             String name=System.currentTimeMillis()+".jpeg";
-            ObjectWriteResponse response = minioClient.putObject(
-                    PutObjectArgs.builder()
-                            .bucket(bucket)
-                            .object(name)
-                            .stream(fileInputStream, file.getFile().length(), -1) // 传入文件流和文件长度
-                            .contentType("image/jpeg")
-                            .build());
 
+            minioClient.putObject(
+                    bucket,name,new FileInputStream(file.getFile()),file.getFile().length(),null,null, file.getContentType()
+            );
 
             String url = "http://"+PropKit.get("minio_host")+":"+PropKit.get("minio_port")
                     +"/"+bucket+"/"+name;
@@ -71,4 +61,3 @@ public class FileUploader {
 
     }
 }
- 
