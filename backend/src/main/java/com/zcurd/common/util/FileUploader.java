@@ -27,7 +27,7 @@ public class FileUploader {
                 host = inetAddress.getHostAddress();
                 System.out.println("host change to : " + host);
             }
-            minioClient = new MinioClient(host),
+            minioClient = new MinioClient(host,
                     Integer.valueOf(PropKit.get("minio_port")),
                     PropKit.get("minio_username"),
                     PropKit.get("minio_password"),false);
