@@ -46,7 +46,7 @@
 
 
 
-连上mysql，目前端口是9106，导入根目录里的prize_xxxx-xx-xx.sql，用最新的！
+连上mysql，目前端口是9007，导入根目录里的prize_xxxx-xx-xx.sql，用最新的！
 
 访问9006的minio控制台，创建prize的桶，并在Buckets - prize桶 - Anonymous下，
 
@@ -64,17 +64,25 @@
 
 ##### 3、访问
 
-管理后台：9103
-
-api接口：9102 ， /doc.html
+minio访问：9005
 
 minio控制台：9006  ， minioadmin /  minioadmin
 
-mysql: 9106
+mysql: 9007
+
+rabbitmq控制台：9008
+
+
 
 nginx: 9101
 
+api接口：9102 ， /doc.html
 
+管理后台：9103
+
+
+
+其他端口如redis等不对外暴露，直接程序走docker-network内链接
 
 
 

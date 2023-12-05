@@ -10,14 +10,16 @@ services:
       - ./mysql-data:/var/lib/mysql 
       - ./docker-compose-init.sql:/docker-entrypoint-initdb.d/init.sql 
     ports:  
-      - "9106:3306"  
+      - "9007:3306"
     networks:  
       - lottery_net
 
   lottery-rabbitmq:  
     image: rabbitmq:3.6.10-management  
     container_name: lottery-rabbitmq  
-    restart: always  
+    restart: always
+    ports:
+      - "9008:15672"
     networks:  
       - lottery_net
 
