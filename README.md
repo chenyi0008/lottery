@@ -26,7 +26,7 @@
 
 到backend下，修改db.properties，只需要修改minio的地址、端口即可，其他会直接走docker-net
 
-执行 mvn docker:build打包
+执行 mvn clean package docker:build打包
 
 
 

@@ -104,9 +104,11 @@ services:
     volumes:  
       - ../backend/src/main/webapp/upload:/usr/local/tomcat/webapps/ROOT/upload:rw
     links:  
-      - lottery-mysql  
+      - lottery-mysql
+      - lottery-minio
     depends_on:  
-      - lottery-mysql  
+      - lottery-mysql
+      - lottery-minio
     networks:  
       - lottery_net
 
