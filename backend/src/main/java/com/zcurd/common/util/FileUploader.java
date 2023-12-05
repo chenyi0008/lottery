@@ -19,16 +19,10 @@ public class FileUploader {
                     Integer.valueOf(PropKit.get("minio_port")),
                     PropKit.get("minio_username"),
                     PropKit.get("minio_password"),false);
-        } catch (InvalidEndpointException e) {
-            throw new RuntimeException(e);
-        } catch (InvalidPortException e) {
-            throw new RuntimeException(e);
-        }
 
+            System.out.println("minio connected, buckets="+minioClient.listBuckets());
 
-        boolean found = false;
-        try {
-            found = minioClient.bucketExists(bucket);
+            boolean found = minioClient.bucketExists(bucket);
             if (!found) {
                 // 创建桶
                 minioClient.makeBucket(bucket);
