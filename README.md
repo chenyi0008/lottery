@@ -38,11 +38,19 @@
 
 
 
-##### 2、启动
+##### 2、启动并初始化
 
 到deploy下，先用 docker-compose up 执行一下，启动后会有异常，先不管它
 
+
+
 连上mysql，目前端口是9106，导入根目录里的prize_xxxx-xx-xx.sql，用最新的！
+
+访问9006的minio控制台，创建prize的桶，并在Buckets - prize桶 - Anonymous下，
+
+点击Add Access Rule按钮，Prefix设置成  /  ,  Access可以是ReadOnly，否则url访问会403
+
+![image-20231205下午32314888](pic//image-20231205%E4%B8%8B%E5%8D%8832314888.png)
 
 
 
@@ -63,3 +71,9 @@ minio控制台：9006  ， minioadmin /  minioadmin
 mysql: 9106
 
 nginx: 9101
+
+
+
+
+
+备注：docker-compose里的端口可以根据自己情况修改
