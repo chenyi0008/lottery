@@ -24,7 +24,9 @@
 
 ##### 1、打包镜像
 
-到backend下，修改db.properties，只需要修改minio的地址、端口即可，其他会直接走docker-net
+到backend下，修改db.properties，
+
+**只需要修改minio_url里的ip为服务器ip即可**，其他项目里所有的配置会直接走docker-net
 
 执行 mvn clean package docker:build打包
 
