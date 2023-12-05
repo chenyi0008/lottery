@@ -49,7 +49,7 @@ public class FileUploader {
                     bucket,name,new FileInputStream(file.getFile()),file.getFile().length(),null,null, file.getContentType()
             );
 
-            String url = "http://"+PropKit.get("minio_host")+":"+PropKit.get("minio_port")
+            String url = PropKit.get("minio_url")
                     +"/"+bucket+"/"+name;
 
             System.out.println(url);
