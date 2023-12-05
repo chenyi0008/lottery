@@ -9,6 +9,7 @@ import com.jfinal.upload.UploadFile;
 import io.minio.*;
 import io.minio.errors.*;
 import io.minio.org.apache.commons.validator.routines.InetAddressValidator;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * @ClassName: FileUploader - MinIO
@@ -49,7 +50,8 @@ public class FileUploader {
     public static String upload(UploadFile file){
         try {
             InputStream fileInputStream = fileInputStream = new FileInputStream(file.getFile());
-            String name=System.currentTimeMillis()+".jpeg";
+            String name=System.currentTimeMillis()+"."+ FilenameUtils.getExtension(file.getFileName());
+
 
             minioClient.putObject(
                     bucket,name,new FileInputStream(file.getFile()),file.getFile().length(),null,null, file.getContentType()
