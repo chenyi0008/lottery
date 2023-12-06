@@ -1,7 +1,7 @@
 <template>
   <div class="user-page" v-show="loadFlag">
     <div class="page-cont">
-      <GoBacks />
+      <GoBack />
       <main>
         <div class="user-info" >
           <img :src="userInfo.pic" alt="">
