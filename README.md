@@ -46,7 +46,7 @@
 
 
 
-连上mysql，目前端口是9007，导入根目录里的prize_xxxx-xx-xx.sql，用最新的！
+连上mysql，目前端口是9007，导入根目录里的prize_xxxx-xx-xx.sql到prize数据库，用最新的！
 
 访问9006的minio控制台，创建prize的桶，并在Buckets - prize桶 - Anonymous下，
 
