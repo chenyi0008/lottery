@@ -103,9 +103,7 @@ services:
     restart: always 
     ports:  
       - "9103:8080"       
-    volumes:  
-      - ../backend/src/main/webapp/upload:/usr/local/tomcat/webapps/ROOT/upload:rw
-    links:  
+    links:
       - lottery-mysql
       - lottery-minio
     depends_on:  

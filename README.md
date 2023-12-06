@@ -56,9 +56,7 @@
 
 
 
-停掉服务： docker-compose down
-
-再次启动： docker-compose up -d ，将会启动正常
+重启服务： docker-compose restart ，将会启动正常
 
 
 
