@@ -69,6 +69,9 @@ minio控制台：9006  ， minioadmin /  minioadmin
 mysql: 9007
 
 rabbitmq控制台：9008
+rabbitmq消息：9009
+
+redis：9010
 
 
 
