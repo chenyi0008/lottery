@@ -15,11 +15,11 @@ import com.jfinal.plugin.c3p0.C3p0Plugin;
 public class _JFinalDemoGenerator {
 	
 	public static DataSource getDataSource() {
-		PropKit.use("db.properties");
+		PropKit.use("application.properties");
 		C3p0Plugin c3p0Plugin = new C3p0Plugin(
-				PropKit.get("base_jdbcUrl"), 
-				PropKit.get("base_user"), 
-				PropKit.get("base_password").trim());
+				PropKit.get("jdbc_url"),
+				PropKit.get("jdbc_user"),
+				PropKit.get("jdbc_password").trim());
 		c3p0Plugin.start();
 		return c3p0Plugin.getDataSource();
 	}

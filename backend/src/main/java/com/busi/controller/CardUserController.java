@@ -8,9 +8,7 @@ import com.zcurd.common.base.BaseController;
 import com.zcurd.common.render.csv.CsvRender;
 import com.zcurd.common.util.PasswordUtil;
 import com.zcurd.common.util.StringUtil;
-import sun.security.provider.MD5;
 
-import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

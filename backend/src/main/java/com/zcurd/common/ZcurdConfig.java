@@ -16,7 +16,9 @@ import com.jfinal.config.JFinalConfig;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
 import com.jfinal.core.JFinal;
+import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
+import com.jfinal.log.Log;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.render.FreeMarkerRender;
@@ -45,10 +47,15 @@ import com.zcurd.online.service.TaskService;
 
 import freemarker.template.TemplateModelException;
 
+import java.util.Map;
+import java.util.Properties;
+
 /**
  * API引导式配置
  */
 public class ZcurdConfig extends JFinalConfig {
+	private Log log = Log.getLog(ZcurdConfig.class);
+
 	private AccountConfig accountConfig = new AccountConfig();
 	private static Constants jfinalConstants;
 	
@@ -58,7 +65,17 @@ public class ZcurdConfig extends JFinalConfig {
 	public void configConstant(Constants me) {
 		accountConfig.configConstant(me);
 		// 加载少量必要配置，随后可用PropKit.get(...)获取值
-		PropKit.use("db.properties");
+		PropKit.use("application.properties");
+		//取到系统配置
+		Properties prop = PropKit.getProp().getProperties();
+		//如果设置了系统变量，以系统变量为准，参考Springboot配置管理，方便部署
+		Map<String,String> env = System.getenv();
+		env.keySet().forEach(k -> {
+			if (prop.containsKey(k)){
+				log.info(String.format("overide property: k=%s,value=%s,old=%s",k,env.get(k),prop.get(k)));
+				prop.setProperty(k,env.get(k));
+			}
+		});
 		me.setDevMode(PropKit.getBoolean("devMode", false));
 		me.setViewType(ViewType.FREE_MARKER);
 		jfinalConstants = me;
@@ -87,7 +104,7 @@ public class ZcurdConfig extends JFinalConfig {
 	public void configPlugin(Plugins me) {
 		accountConfig.configPlugin(me);
 
-		DruidPlugin druidPlugin = new DruidPlugin(PropKit.get("base_jdbcUrl"), PropKit.get("base_user"), PropKit.get("base_password").trim());
+		DruidPlugin druidPlugin = new DruidPlugin(PropKit.get("jdbc_url"), PropKit.get("jdbc_user"), PropKit.get("jdbc_password").trim());
 		druidPlugin.set(2,1,5);
 		me.add(druidPlugin);
 		
@@ -107,8 +124,9 @@ public class ZcurdConfig extends JFinalConfig {
 		arp.addMapping("sys_login_log", "id", SysLoginLog.class);
 		_MappingKit.mapping(arp);
 		
-		//业务数据库
-		DruidPlugin druidPluginAir = new DruidPlugin(PropKit.get("busi_jdbcUrl"), PropKit.get("busi_user"), PropKit.get("busi_password").trim());
+		//业务数据库，支持分库与多数据源
+//		DruidPlugin druidPluginAir = new DruidPlugin(PropKit.get("jdbc_url"), PropKit.get("jdbc_user"), PropKit.get("jdbc_password").trim());
+		DruidPlugin druidPluginAir = druidPlugin;
 		me.add(druidPluginAir);
 		ActiveRecordPlugin arpAir = new ActiveRecordPlugin("zcurd_busi", druidPluginAir);
 		arpAir.setShowSql(true);
