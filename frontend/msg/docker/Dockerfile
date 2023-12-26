@@ -1,4 +1,4 @@
-FROM daocloud.io/library/java:openjdk-8u40-jdk
+FROM anapsix/alpine-java:8_server-jre_unlimited
 #语言字符，解决乱码问题
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
