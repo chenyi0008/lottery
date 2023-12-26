@@ -1,8 +1,8 @@
 package com.itheima.prize.api.action;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.CardUser;
-import com.itheima.prize.commons.db.entity.CardUserExample;
 import com.itheima.prize.commons.db.mapper.CardUserMapper;
 import com.itheima.prize.commons.utils.ApiResult;
 import com.itheima.prize.commons.utils.PasswordUtil;
@@ -39,9 +39,10 @@ public class LoginController {
         if (errortimes != null && errortimes >= 5){
             return new ApiResult(0, "密码错误5次，请5分钟后再登录",null);
         }
-        CardUserExample userExample = new CardUserExample();
-        userExample.createCriteria().andUnameEqualTo(account).andPasswdEqualTo(PasswordUtil.encodePassword(password));
-        List<CardUser> users = userMapper.selectByExample(userExample);
+        QueryWrapper<CardUser> wrapper = new QueryWrapper<>();
+        wrapper.eq("uname",account).eq("password",PasswordUtil.encodePassword(password));
+        List<CardUser> users = userMapper.selectList(wrapper);
+
         if (users != null && users.size() > 0) {
             CardUser user = users.get(0);
             //信息脱敏，不要将敏感信息带入session以免其他接口不小心泄露到前台

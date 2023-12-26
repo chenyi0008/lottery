@@ -1,5 +1,6 @@
 package com.itheima.prize.msg;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.*;
 import com.itheima.prize.commons.db.mapper.CardGameMapper;
@@ -39,13 +40,12 @@ public class GameTask {
         //当前时间
         Date now = new Date();
         //查询将来1分钟内要开始的活动
-        CardGameExample example = new CardGameExample();
-        CardGameExample.Criteria criteria = example.createCriteria();
+        QueryWrapper<CardGame> gameQueryWrapper = new QueryWrapper<>();
         //开始时间大于当前时间
-        criteria.andStarttimeGreaterThan(now);
+        gameQueryWrapper.gt("starttime",now);
         //小于等于（当前时间+1分钟）
-        criteria.andStarttimeLessThanOrEqualTo(DateUtils.addMinutes(now,1));
-        List<CardGame> list = gameMapper.selectByExample(example);
+        gameQueryWrapper.le("starttime",DateUtils.addMinutes(now,1));
+        List<CardGame> list = gameMapper.selectList(gameQueryWrapper);
         if(list.size() == 0){
             //没有查到要开始的活动
             log.info("game list scan : size = 0");
@@ -64,6 +64,10 @@ public class GameTask {
             //活动持续时间（ms）
             long duration = end - start;
 
+            Map queryMap = new HashMap();
+            queryMap.put("gameid",game.getId());
+
+
             //活动基本信息
             game.setStatus(1);
             redisUtil.set(RedisKeys.INFO+game.getId(),game,-1);
@@ -76,9 +80,7 @@ public class GameTask {
             log.info("load product type:{}",productMap.size());
 
             //奖品数量等配置信息
-            CardGameProductExample productExample = new CardGameProductExample();
-            productExample.createCriteria().andGameidEqualTo(game.getId());
-            List<CardGameProduct> gameProducts = gameProductMapper.selectByExample(productExample);
+            List<CardGameProduct> gameProducts = gameProductMapper.selectByMap(queryMap);
             log.info("load bind product:{}",gameProducts.size());
 
             //令牌桶
@@ -107,9 +109,7 @@ public class GameTask {
             redisUtil.expire(RedisKeys.TOKENS + game.getId(),expire);
 
             //奖品策略配置信息
-            CardGameRulesExample rulesExample = new CardGameRulesExample();
-            rulesExample.createCriteria().andGameidEqualTo(game.getId());
-            List<CardGameRules> rules = gameRulesMapper.selectByExample(rulesExample);
+            List<CardGameRules> rules = gameRulesMapper.selectByMap(queryMap);
             //遍历策略，存入redis hset
             rules.forEach(r -> {
                 redisUtil.hset(RedisKeys.MAXGOAL +game.getId(),r.getUserlevel()+"",r.getGoalTimes());
@@ -125,7 +125,7 @@ public class GameTask {
 
             //活动状态变更为已预热，禁止管理后台再随便变动
             game.setStatus(1);
-            gameMapper.updateByPrimaryKey(game);
+            gameMapper.updateById(game);
         });
     }
 }

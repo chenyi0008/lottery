@@ -12,3 +12,4 @@ public class CardProductDto extends CardProduct {
         this.amount = amount;
     }
 }
+

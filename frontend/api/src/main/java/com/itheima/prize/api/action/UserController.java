@@ -1,26 +1,27 @@
 package com.itheima.prize.api.action;
 
-import com.itheima.prize.commons.config.RedisKeys;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.prize.commons.db.entity.CardUser;
 import com.itheima.prize.commons.db.entity.CardUserDto;
 import com.itheima.prize.commons.db.entity.ViewCardUserHit;
-import com.itheima.prize.commons.db.entity.ViewCardUserHitExample;
 import com.itheima.prize.commons.db.mapper.CardUserGamesMapper;
 import com.itheima.prize.commons.db.mapper.ViewCardUserHitMapper;
 import com.itheima.prize.commons.utils.ApiResult;
 import com.itheima.prize.commons.utils.PageBean;
 import com.itheima.prize.commons.utils.RedisUtil;
-import com.github.pagehelper.PageHelper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/user")
@@ -59,15 +60,13 @@ public class UserController {
     public ApiResult hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit,HttpServletRequest request) {
         HttpSession session = request.getSession();
         CardUser user = (CardUser) session.getAttribute("user");
-        ViewCardUserHitExample example = new ViewCardUserHitExample();
-        ViewCardUserHitExample.Criteria criteria = example.createCriteria().andUseridEqualTo(user.getId());
+        QueryWrapper<ViewCardUserHit> wrapper = new QueryWrapper<>();
+        wrapper.eq("userid",user.getId());
         if (gameid != -1){
-            criteria.andGameidEqualTo(gameid);
+            wrapper.eq("gameid",gameid);
         }
-        long total = hitMapper.countByExample(example);
-        PageHelper.startPage(curpage, limit);
-        List<ViewCardUserHit> all = hitMapper.selectByExample(example);
-        return new ApiResult(1, "成功",new PageBean<ViewCardUserHit>(curpage,limit,total,all));
+        Page<ViewCardUserHit> all = hitMapper.selectPage(new Page(curpage,limit),wrapper);
+        return new ApiResult(1, "成功",new PageBean<ViewCardUserHit>(all));
 
     }
 

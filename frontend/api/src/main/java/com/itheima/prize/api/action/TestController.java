@@ -1,5 +1,6 @@
 package com.itheima.prize.api.action;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.itheima.prize.api.config.LuaScript;
 import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.*;
@@ -45,20 +46,9 @@ public class TestController {
     @Autowired
     private LuaScript luaScript;
 
-    @GetMapping("/test")
-    @ApiOperation(value = "测试mybatis")
-    public Object test(){
-        CardGameExample example = new CardGameExample();
-        //查询条件
-        example.createCriteria().andEndtimeGreaterThan(new Date());
-        //列表查询
-        List<CardGame> list = cardGameMapper.selectByExample(example);
-        return list;
-    }
 
 
-
-        @GetMapping("/luatest/{gameid}")
+    @GetMapping("/luatest/{gameid}")
     @ApiOperation(value = "测试Lua脚本")
     @ApiImplicitParams({
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
@@ -102,16 +92,18 @@ public class TestController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult reset(@PathVariable int gameid){
-        CardGame game = cardGameMapper.selectByPrimaryKey(gameid);
+        CardGame game = cardGameMapper.selectById(gameid);
         game.setStatus(0);
         game.setStarttime(DateUtils.addMinutes(new Date(),2));
-        game.setEndtime(DateUtils.addMinutes(new Date(),4));
-        cardGameMapper.updateByPrimaryKey(game);
+        game.setEndtime(DateUtils.addMinutes(new Date(),30));
+        cardGameMapper.updateById(game);
 
-        CardUserHitExample example = new CardUserHitExample();
-        example.createCriteria().andGameidEqualTo(gameid);
+        redisUtil.del(RedisKeys.TOKENS+gameid);
 
-        hitMapper.deleteByExample(example);
+        QueryWrapper<CardUserHit> wrapper = new QueryWrapper<>();
+        wrapper.eq("gameid",gameid);
+
+        hitMapper.delete(wrapper);
         return new ApiResult(200,"修改成功",game);
     }
 
