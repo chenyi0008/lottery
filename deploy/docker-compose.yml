@@ -4,9 +4,15 @@ services:
     image: mysql:5.7.43  
     container_name: lottery-mysql  
     restart: always  
-    environment:  
-      MYSQL_ROOT_PASSWORD: root  
-    command: --lower_case_table_names=1
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+      TZ: Asia/Shanghai
+    command:
+      --lower_case_table_names=1
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --explicit_defaults_for_timestamp=true
     volumes:  
       - ./mysql-data:/var/lib/mysql 
       - ./docker-compose-init.sql:/docker-entrypoint-initdb.d/init.sql 
