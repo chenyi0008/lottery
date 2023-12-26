@@ -106,13 +106,23 @@ services:
     container_name: lottery-backend  
     restart: always 
     ports:  
-      - "9103:8080"       
+      - "9103:8888"
     links:
       - lottery-mysql
       - lottery-minio
     depends_on:  
       - lottery-mysql
       - lottery-minio
+    environment:
+      jdbc_url: jdbc:mysql://lottery-mysql/prize?useUnicode=true&characterEncoding=utf-8
+      jdbc_user: root
+      jdbc_password: root
+      minio_url: http://116.62.213.90:9005
+      minio_host: lottery-minio
+      minio_port: 9000
+      minio_bucket: prize
+      minio_username: minioadmin
+      minio_password: minioadmin
     networks:  
       - lottery_net
 
