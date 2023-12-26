@@ -7,6 +7,7 @@ import com.itheima.prize.commons.db.entity.CardUserDto;
 import com.itheima.prize.commons.db.entity.ViewCardUserHit;
 import com.itheima.prize.commons.db.mapper.ViewCardUserHitMapper;
 import com.itheima.prize.commons.db.service.GameLoadService;
+import com.itheima.prize.commons.db.service.ViewCardUserHitService;
 import com.itheima.prize.commons.utils.ApiResult;
 import com.itheima.prize.commons.utils.PageBean;
 import com.itheima.prize.commons.utils.RedisUtil;
@@ -31,7 +32,7 @@ public class UserController {
     @Autowired
     private RedisUtil redisUtil;
     @Autowired
-    private ViewCardUserHitMapper hitMapper;
+    private ViewCardUserHitService hitService;
     @Autowired
     private GameLoadService loadService;
 
@@ -65,7 +66,7 @@ public class UserController {
         if (gameid != -1){
             wrapper.eq("gameid",gameid);
         }
-        Page<ViewCardUserHit> all = hitMapper.selectPage(new Page(curpage,limit),wrapper);
+        Page<ViewCardUserHit> all = hitService.page(new Page(curpage,limit),wrapper);
         return new ApiResult(1, "成功",new PageBean<ViewCardUserHit>(all));
 
     }
