@@ -6,6 +6,7 @@ import com.itheima.prize.commons.config.RabbitKeys;
 import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.*;
 import com.itheima.prize.commons.db.mapper.CardGameMapper;
+import com.itheima.prize.commons.db.service.CardGameService;
 import com.itheima.prize.commons.utils.ApiResult;
 import com.itheima.prize.commons.utils.RedisUtil;
 import io.swagger.annotations.Api;
@@ -29,8 +30,6 @@ import java.util.*;
 @Api(tags = {"抽奖模块"})
 public class ActController {
 
-    @Autowired
-    private CardGameMapper cardGameMapper;
     @Autowired
     private RedisUtil redisUtil;
     @Autowired

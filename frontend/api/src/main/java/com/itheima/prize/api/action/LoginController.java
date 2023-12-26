@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.CardUser;
 import com.itheima.prize.commons.db.mapper.CardUserMapper;
+import com.itheima.prize.commons.db.service.CardUserService;
 import com.itheima.prize.commons.utils.ApiResult;
 import com.itheima.prize.commons.utils.PasswordUtil;
 import com.itheima.prize.commons.utils.RedisUtil;
@@ -23,7 +24,7 @@ import java.util.List;
 @Api(tags = {"登录模块"})
 public class LoginController {
     @Autowired
-    private CardUserMapper userMapper;
+    private CardUserService userService;
 
     @Autowired
     private RedisUtil redisUtil;
@@ -40,8 +41,8 @@ public class LoginController {
             return new ApiResult(0, "密码错误5次，请5分钟后再登录",null);
         }
         QueryWrapper<CardUser> wrapper = new QueryWrapper<>();
-        wrapper.eq("uname",account).eq("password",PasswordUtil.encodePassword(password));
-        List<CardUser> users = userMapper.selectList(wrapper);
+        wrapper.eq("uname",account).eq("passwd",PasswordUtil.encodePassword(password));
+        List<CardUser> users = userService.list(wrapper);
 
         if (users != null && users.size() > 0) {
             CardUser user = users.get(0);

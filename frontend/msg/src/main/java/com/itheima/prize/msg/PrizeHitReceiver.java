@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.itheima.prize.commons.config.RabbitKeys;
 import com.itheima.prize.commons.db.entity.CardUserHit;
 import com.itheima.prize.commons.db.mapper.CardUserHitMapper;
+import com.itheima.prize.commons.db.service.CardUserHitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -17,11 +18,11 @@ public class PrizeHitReceiver {
     private final static Logger logger = LoggerFactory.getLogger(PrizeHitReceiver.class);
 
     @Autowired
-    private CardUserHitMapper hitMapper;
+    private CardUserHitService hitService;
 
     @RabbitHandler
     public void processMessage(String message) {
         logger.info("user hit : message={}", message);
-        hitMapper.insert(JSON.parseObject(message, CardUserHit.class));
+        hitService.save(JSON.parseObject(message, CardUserHit.class));
     }
 }

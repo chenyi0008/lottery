@@ -7,6 +7,9 @@ import com.itheima.prize.commons.db.entity.*;
 import com.itheima.prize.commons.db.mapper.CardGameMapper;
 import com.itheima.prize.commons.db.mapper.CardProductMapper;
 import com.itheima.prize.commons.db.mapper.CardUserHitMapper;
+import com.itheima.prize.commons.db.service.CardGameService;
+import com.itheima.prize.commons.db.service.CardProductService;
+import com.itheima.prize.commons.db.service.CardUserHitService;
 import com.itheima.prize.commons.utils.ApiResult;
 import com.itheima.prize.commons.utils.PageBean;
 import com.itheima.prize.commons.utils.RedisUtil;
@@ -36,13 +39,13 @@ import java.util.Map;
 public class TestController {
     private  final static Logger log = LoggerFactory.getLogger(TestController.class);
     @Autowired
-    private CardGameMapper cardGameMapper;
+    private CardGameService gameService;
     @Autowired
-    private CardProductMapper cardProductMapper;
+    private CardProductService productService;
     @Autowired
     private RedisUtil redisUtil;
     @Autowired
-    private CardUserHitMapper hitMapper;
+    private CardUserHitService hitService;
     @Autowired
     private LuaScript luaScript;
 
@@ -92,18 +95,18 @@ public class TestController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult reset(@PathVariable int gameid){
-        CardGame game = cardGameMapper.selectById(gameid);
+        CardGame game = gameService.getById(gameid);
         game.setStatus(0);
         game.setStarttime(DateUtils.addMinutes(new Date(),2));
         game.setEndtime(DateUtils.addMinutes(new Date(),30));
-        cardGameMapper.updateById(game);
+        gameService.updateById(game);
 
         redisUtil.del(RedisKeys.TOKENS+gameid);
 
         QueryWrapper<CardUserHit> wrapper = new QueryWrapper<>();
         wrapper.eq("gameid",gameid);
 
-        hitMapper.delete(wrapper);
+        hitService.remove(wrapper);
         return new ApiResult(200,"修改成功",game);
     }
 

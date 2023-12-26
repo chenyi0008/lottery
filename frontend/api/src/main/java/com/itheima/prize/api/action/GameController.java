@@ -8,6 +8,9 @@ import com.itheima.prize.commons.db.entity.ViewCardUserHit;
 import com.itheima.prize.commons.db.mapper.CardGameMapper;
 import com.itheima.prize.commons.db.mapper.GameLoadMapper;
 import com.itheima.prize.commons.db.mapper.ViewCardUserHitMapper;
+import com.itheima.prize.commons.db.service.CardGameService;
+import com.itheima.prize.commons.db.service.GameLoadService;
+import com.itheima.prize.commons.db.service.ViewCardUserHitService;
 import com.itheima.prize.commons.utils.ApiResult;
 import com.itheima.prize.commons.utils.PageBean;
 import io.swagger.annotations.Api;
@@ -28,11 +31,11 @@ import java.util.List;
 @Api(tags = {"活动模块"})
 public class GameController {
     @Autowired
-    private GameLoadMapper loadMapper;
+    private GameLoadService loadService;
     @Autowired
-    private CardGameMapper gameMapper;
+    private CardGameService gameService;
     @Autowired
-    private ViewCardUserHitMapper hitMapper;
+    private ViewCardUserHitService hitService;
 
     @GetMapping("/list/{status}/{curpage}/{limit}")
     @ApiOperation(value = "活动列表")
@@ -62,7 +65,7 @@ public class GameController {
                 break;
         }
         gameQueryWrapper.orderByDesc("starttime");
-        Page<CardGame> page = gameMapper.selectPage(new Page<>(curpage,limit),gameQueryWrapper);
+        Page<CardGame> page = gameService.page(new Page<>(curpage,limit),gameQueryWrapper);
         return new ApiResult(1,"成功",new PageBean<CardGame>(page));
     }
 
@@ -72,7 +75,7 @@ public class GameController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<CardGame> info(@PathVariable int gameid) {
-        return new ApiResult(1,"成功",gameMapper.selectById(gameid));
+        return new ApiResult(1,"成功",gameService.getById(gameid));
     }
 
     @GetMapping("/products/{gameid}")
@@ -81,7 +84,7 @@ public class GameController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<List<CardProductDto>> products(@PathVariable int gameid) {
-        return new ApiResult(1,"成功",loadMapper.getByGameId(gameid));
+        return new ApiResult(1,"成功",loadService.getByGameId(gameid));
     }
 
     @GetMapping("/hit/{gameid}/{curpage}/{limit}")
@@ -94,7 +97,7 @@ public class GameController {
     public ApiResult<PageBean<ViewCardUserHit>> hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit) {
         QueryWrapper<ViewCardUserHit> wrapper = new QueryWrapper<>();
         wrapper.eq("gameid",gameid);
-        Page<ViewCardUserHit> page = hitMapper.selectPage(new Page<ViewCardUserHit>(curpage,limit),wrapper);
+        Page<ViewCardUserHit> page = hitService.page(new Page<ViewCardUserHit>(curpage,limit),wrapper);
         return new ApiResult(1, "成功",new PageBean<ViewCardUserHit>(page));
     }
 

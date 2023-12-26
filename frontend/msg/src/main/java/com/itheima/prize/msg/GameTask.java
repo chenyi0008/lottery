@@ -3,10 +3,10 @@ package com.itheima.prize.msg;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.*;
-import com.itheima.prize.commons.db.mapper.CardGameMapper;
-import com.itheima.prize.commons.db.mapper.CardGameProductMapper;
-import com.itheima.prize.commons.db.mapper.CardGameRulesMapper;
-import com.itheima.prize.commons.db.mapper.GameLoadMapper;
+import com.itheima.prize.commons.db.service.CardGameProductService;
+import com.itheima.prize.commons.db.service.CardGameRulesService;
+import com.itheima.prize.commons.db.service.CardGameService;
+import com.itheima.prize.commons.db.service.GameLoadService;
 import com.itheima.prize.commons.utils.RedisUtil;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -25,13 +25,13 @@ import java.util.*;
 public class GameTask {
     private final static Logger log = LoggerFactory.getLogger(GameTask.class);
     @Autowired
-    private CardGameMapper gameMapper;
+    private CardGameService gameService;
     @Autowired
-    private CardGameProductMapper gameProductMapper;
+    private CardGameProductService gameProductService;
     @Autowired
-    private CardGameRulesMapper gameRulesMapper;
+    private CardGameRulesService gameRulesService;
     @Autowired
-    private GameLoadMapper gameLoadMapper;
+    private GameLoadService gameLoadService;
     @Autowired
     private RedisUtil redisUtil;
 
@@ -45,7 +45,7 @@ public class GameTask {
         gameQueryWrapper.gt("starttime",now);
         //小于等于（当前时间+1分钟）
         gameQueryWrapper.le("starttime",DateUtils.addMinutes(now,1));
-        List<CardGame> list = gameMapper.selectList(gameQueryWrapper);
+        List<CardGame> list = gameService.list(gameQueryWrapper);
         if(list.size() == 0){
             //没有查到要开始的活动
             log.info("game list scan : size = 0");
@@ -74,13 +74,13 @@ public class GameTask {
             log.info("load game info:{},{},{},{}", game.getId(),game.getTitle(),game.getStarttime(),game.getEndtime());
 
             //活动奖品信息
-            List<CardProductDto> products = gameLoadMapper.getByGameId(game.getId());
+            List<CardProductDto> products = gameLoadService.getByGameId(game.getId());
             Map<Integer,CardProduct> productMap = new HashMap<>(products.size());
             products.forEach(p -> productMap.put(p.getId(),p));
             log.info("load product type:{}",productMap.size());
 
             //奖品数量等配置信息
-            List<CardGameProduct> gameProducts = gameProductMapper.selectByMap(queryMap);
+            List<CardGameProduct> gameProducts = gameProductService.listByMap(queryMap);
             log.info("load bind product:{}",gameProducts.size());
 
             //令牌桶
@@ -109,7 +109,7 @@ public class GameTask {
             redisUtil.expire(RedisKeys.TOKENS + game.getId(),expire);
 
             //奖品策略配置信息
-            List<CardGameRules> rules = gameRulesMapper.selectByMap(queryMap);
+            List<CardGameRules> rules = gameRulesService.listByMap(queryMap);
             //遍历策略，存入redis hset
             rules.forEach(r -> {
                 redisUtil.hset(RedisKeys.MAXGOAL +game.getId(),r.getUserlevel()+"",r.getGoalTimes());
@@ -125,7 +125,7 @@ public class GameTask {
 
             //活动状态变更为已预热，禁止管理后台再随便变动
             game.setStatus(1);
-            gameMapper.updateById(game);
+            gameService.updateById(game);
         });
     }
 }

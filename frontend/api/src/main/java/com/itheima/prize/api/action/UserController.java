@@ -5,8 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.prize.commons.db.entity.CardUser;
 import com.itheima.prize.commons.db.entity.CardUserDto;
 import com.itheima.prize.commons.db.entity.ViewCardUserHit;
-import com.itheima.prize.commons.db.mapper.CardUserGamesMapper;
 import com.itheima.prize.commons.db.mapper.ViewCardUserHitMapper;
+import com.itheima.prize.commons.db.service.GameLoadService;
 import com.itheima.prize.commons.utils.ApiResult;
 import com.itheima.prize.commons.utils.PageBean;
 import com.itheima.prize.commons.utils.RedisUtil;
@@ -33,7 +33,7 @@ public class UserController {
     @Autowired
     private ViewCardUserHitMapper hitMapper;
     @Autowired
-    private CardUserGamesMapper cardUserGamesMapper;
+    private GameLoadService loadService;
 
     @GetMapping("/info")
     @ApiOperation(value = "用户信息")
@@ -44,8 +44,8 @@ public class UserController {
             return new ApiResult(0, "登录超时",null);
         }else {
             CardUserDto dto = new CardUserDto(user);
-            dto.setGames(cardUserGamesMapper.getGamesNumByUserId(user.getId()));
-            dto.setProducts(cardUserGamesMapper.getPrizesNumByUserId(user.getId()));
+            dto.setGames(loadService.getGamesNumByUserId(user.getId()));
+            dto.setProducts(loadService.getPrizesNumByUserId(user.getId()));
             return new ApiResult(1, "成功",dto);
         }
     }
