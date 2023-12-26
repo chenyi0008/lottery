@@ -89,7 +89,7 @@ api接口：9102 ， /doc.html
 
 
 
-其他端口如redis等不对外暴露，直接程序走docker-network内链接
+其他端口如redis可以自行改为不对外暴露，直接程序走docker-network内链接
 
 
 
