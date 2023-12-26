@@ -82,6 +82,8 @@ services:
       spring.redis.port: 6379
     networks:  
       - lottery_net
+#    deploy:
+#      replicas: 3
 
   lottery-msg:  
     image: msg:0.0.1-SNAPSHOT  
