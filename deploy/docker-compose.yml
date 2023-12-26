@@ -114,7 +114,7 @@ services:
       - lottery-mysql
       - lottery-minio
     environment:
-      jdbc_url: jdbc:mysql://lottery-mysql/prize?useUnicode=true&characterEncoding=utf-8
+      jdbc_url: jdbc:mysql://lottery-mysql/prize?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useUnicode=true&relaxAutoCommit=true&useSSL=false&serverTimezone=GMT%2B8
       jdbc_user: root
       jdbc_password: root
       minio_url: http://116.62.213.90:9005
