@@ -106,7 +106,7 @@ services:
     container_name: lottery-backend  
     restart: always 
     ports:  
-      - "9103:8888"
+      - "9103:8080"
     links:
       - lottery-mysql
       - lottery-minio
