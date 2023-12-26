@@ -10,4 +10,4 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 COPY msg-0.0.1-SNAPSHOT.jar /opt/ROOT.jar
 WORKDIR /opt
 #启动命令，注意环境配置 prod
-CMD sleep 30;java -Djava.security.egd=file:/dev/./urandom -jar ROOT.jar --spring.profiles.active=prod
+CMD sleep 20;java -Djava.security.egd=file:/dev/./urandom -jar ROOT.jar --spring.profiles.active=prod
