@@ -42,19 +42,21 @@
 
 ##### 2、启动并初始化
 
+====> 到deploy下：
+
 只需要修改一个配置项：docker-compose里minio的外部访问地址，修改ip为你的机器ip
 
 其他配置均为Docker内部网络，不要修改！不要修改！不要修改！
 
 ![image-20240102下午64926541](pic//image-20240102%E4%B8%8B%E5%8D%8864926541.png)
 
-到deploy下，先用 docker-compose up 执行一下，启动后会有异常，先不管它
 
 
+先用 docker-compose up lottery-mysql lottery-minio 执行一下，启动Mysql和Minio
 
-连上mysql，目前端口是9007，导入根目录里的prize_xxxx-xx-xx.sql到prize数据库，用最新的！
+（1）用客户端工具连上mysql，目前端口是9007，创建prize数据库，导入根目录里的prize_xxxx-xx-xx.sql到prize数据库，用最新的！
 
-访问9006的minio控制台，创建prize的桶，并在Buckets - prize桶 - Anonymous下，
+（2）访问9006的minio控制台，创建prize的桶，并在Buckets - prize桶 - Anonymous下，
 
 点击Add Access Rule按钮，Prefix设置成  /  ,  Access可以是ReadOnly，否则url访问会403
 
@@ -62,7 +64,7 @@
 
 
 
-重启服务： docker-compose restart ，将会启动正常
+重启服务： docker-compose up -d ，将会后台启动全部服务
 
 
 
