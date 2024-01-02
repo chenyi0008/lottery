@@ -24,15 +24,15 @@
 
 ##### 1、打包镜像
 
-到backend下，修改db.properties，
+====> 到backend下：
 
-**只需要修改minio_url里的ip为服务器ip即可**，其他项目里所有的配置会直接走docker-net
-
-执行 mvn clean package docker:build打包
+执行 mvn clean package docker:build 编译并打包
 
 
 
-到frontend下，执行 mvn clean install -DskipTests 全量编译
+====> 到frontend下：
+
+执行 mvn clean install -DskipTests 全量编译
 
 到api下执行 mvn docker:build打包
 

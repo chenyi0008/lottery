@@ -73,9 +73,9 @@ services:
       - lottery-redis  
     environment:
       server.port: 8080
-      spring.datasource.url: jdbc:mysql://lottery-mysql/prize?useUnicode=true&characterEncoding=utf-8  
-      spring.datasource.username: root  
-      spring.datasource.password: root  
+      spring.datasource.master.url: jdbc:mysql://lottery-mysql/prize?useUnicode=true&characterEncoding=utf-8&serverTimezone=GMT%2B8
+      spring.datasource.master.username: root
+      spring.datasource.master.password: root
       spring.rabbitmq.host: lottery-rabbitmq
       spring.rabbitmq.port: 5672
       spring.redis.host: lottery-redis
@@ -122,15 +122,16 @@ services:
       - lottery-mysql
       - lottery-minio
     environment:
-      jdbc_url: jdbc:mysql://lottery-mysql/prize?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useUnicode=true&relaxAutoCommit=true&useSSL=false&serverTimezone=GMT%2B8
-      jdbc_user: root
-      jdbc_password: root
-      minio_url: http://116.62.213.90:9005
-      minio_host: lottery-minio
-      minio_port: 9000
-      minio_bucket: prize
-      minio_username: minioadmin
-      minio_password: minioadmin
+      server.port: 8080
+      spring.datasource.url: jdbc:mysql://lottery-mysql/prize?useUnicode=true&characterEncoding=utf-8
+      spring.datasource.username: root
+      spring.datasource.password: root
+      minio.url: http://116.62.213.90:9005
+      minio.host: lottery-minio
+      minio.port: 9000
+      minio.bucket: prize
+      minio.username: minioadmin
+      minio.password: minioadmin
     networks:  
       - lottery_net
 
