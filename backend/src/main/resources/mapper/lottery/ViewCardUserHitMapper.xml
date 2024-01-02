@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.ViewCardUserHitMapper">
+    
+    <resultMap type="ViewCardUserHit" id="ViewCardUserHitResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="type"    column="type"    />
+        <result property="uname"    column="uname"    />
+        <result property="realname"    column="realname"    />
+        <result property="idcard"    column="idcard"    />
+        <result property="phone"    column="phone"    />
+        <result property="level"    column="level"    />
+        <result property="name"    column="name"    />
+        <result property="price"    column="price"    />
+        <result property="gameid"    column="gameid"    />
+        <result property="userid"    column="userid"    />
+        <result property="productid"    column="productid"    />
+        <result property="hittime"    column="hittime"    />
+    </resultMap>
+
+    <sql id="selectViewCardUserHitVo">
+        select id, title, type, uname, realname, idcard, phone, level, name, price, gameid, userid, productid, hittime from view_card_user_hit
+    </sql>
+
+    <select id="selectViewCardUserHitList" parameterType="ViewCardUserHit" resultMap="ViewCardUserHitResult">
+        <include refid="selectViewCardUserHitVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="uname != null  and uname != ''"> and uname like concat('%', #{uname}, '%')</if>
+            <if test="realname != null  and realname != ''"> and realname like concat('%', #{realname}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="level != null  and level != ''"> and level = #{level}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectViewCardUserHitById" parameterType="Integer" resultMap="ViewCardUserHitResult">
+        <include refid="selectViewCardUserHitVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertViewCardUserHit" parameterType="ViewCardUserHit">
+        insert into view_card_user_hit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null">title,</if>
+            <if test="type != null">type,</if>
+            <if test="uname != null">uname,</if>
+            <if test="realname != null">realname,</if>
+            <if test="idcard != null">idcard,</if>
+            <if test="phone != null">phone,</if>
+            <if test="level != null">level,</if>
+            <if test="name != null">name,</if>
+            <if test="price != null">price,</if>
+            <if test="gameid != null">gameid,</if>
+            <if test="userid != null">userid,</if>
+            <if test="productid != null">productid,</if>
+            <if test="hittime != null">hittime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null">#{title},</if>
+            <if test="type != null">#{type},</if>
+            <if test="uname != null">#{uname},</if>
+            <if test="realname != null">#{realname},</if>
+            <if test="idcard != null">#{idcard},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="level != null">#{level},</if>
+            <if test="name != null">#{name},</if>
+            <if test="price != null">#{price},</if>
+            <if test="gameid != null">#{gameid},</if>
+            <if test="userid != null">#{userid},</if>
+            <if test="productid != null">#{productid},</if>
+            <if test="hittime != null">#{hittime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateViewCardUserHit" parameterType="ViewCardUserHit">
+        update view_card_user_hit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="uname != null">uname = #{uname},</if>
+            <if test="realname != null">realname = #{realname},</if>
+            <if test="idcard != null">idcard = #{idcard},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="gameid != null">gameid = #{gameid},</if>
+            <if test="userid != null">userid = #{userid},</if>
+            <if test="productid != null">productid = #{productid},</if>
+            <if test="hittime != null">hittime = #{hittime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteViewCardUserHitById" parameterType="Integer">
+        delete from view_card_user_hit where id = #{id}
+    </delete>
+
+    <delete id="deleteViewCardUserHitByIds" parameterType="String">
+        delete from view_card_user_hit where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

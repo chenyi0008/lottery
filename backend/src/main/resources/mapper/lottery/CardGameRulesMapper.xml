@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.CardGameRulesMapper">
+    
+    <resultMap type="CardGameRules" id="CardGameRulesResult">
+        <result property="id"    column="id"    />
+        <result property="gameid"    column="gameid"    />
+        <result property="userlevel"    column="userlevel"    />
+        <result property="enterTimes"    column="enter_times"    />
+        <result property="goalTimes"    column="goal_times"    />
+        <result property="randomRate"    column="random_rate"    />
+    </resultMap>
+
+    <sql id="selectCardGameRulesVo">
+        select id, gameid, userlevel, enter_times, goal_times, random_rate from card_game_rules
+    </sql>
+
+    <select id="selectCardGameRulesList" parameterType="CardGameRules" resultMap="CardGameRulesResult">
+        <include refid="selectCardGameRulesVo"/>
+        <where>  
+            <if test="gameid != null "> and gameid = #{gameid}</if>
+            <if test="userlevel != null "> and userlevel = #{userlevel}</if>
+            <if test="enterTimes != null "> and enter_times = #{enterTimes}</if>
+            <if test="goalTimes != null "> and goal_times = #{goalTimes}</if>
+            <if test="randomRate != null "> and random_rate = #{randomRate}</if>
+        </where>
+    </select>
+    
+    <select id="selectCardGameRulesById" parameterType="Long" resultMap="CardGameRulesResult">
+        <include refid="selectCardGameRulesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCardGameRules" parameterType="CardGameRules" useGeneratedKeys="true" keyProperty="id">
+        insert into card_game_rules
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gameid != null">gameid,</if>
+            <if test="userlevel != null">userlevel,</if>
+            <if test="enterTimes != null">enter_times,</if>
+            <if test="goalTimes != null">goal_times,</if>
+            <if test="randomRate != null">random_rate,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gameid != null">#{gameid},</if>
+            <if test="userlevel != null">#{userlevel},</if>
+            <if test="enterTimes != null">#{enterTimes},</if>
+            <if test="goalTimes != null">#{goalTimes},</if>
+            <if test="randomRate != null">#{randomRate},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCardGameRules" parameterType="CardGameRules">
+        update card_game_rules
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gameid != null">gameid = #{gameid},</if>
+            <if test="userlevel != null">userlevel = #{userlevel},</if>
+            <if test="enterTimes != null">enter_times = #{enterTimes},</if>
+            <if test="goalTimes != null">goal_times = #{goalTimes},</if>
+            <if test="randomRate != null">random_rate = #{randomRate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCardGameRulesById" parameterType="Long">
+        delete from card_game_rules where id = #{id}
+    </delete>
+
+    <delete id="deleteCardGameRulesByIds" parameterType="String">
+        delete from card_game_rules where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

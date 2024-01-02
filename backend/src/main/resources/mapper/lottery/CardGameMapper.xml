@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.CardGameMapper">
+    
+    <resultMap type="CardGame" id="CardGameResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="pic"    column="pic"    />
+        <result property="info"    column="info"    />
+        <result property="starttime"    column="starttime"    />
+        <result property="endtime"    column="endtime"    />
+        <result property="type"    column="type"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <resultMap id="CardGameCardGameProductsRulesResult" type="CardGame" extends="CardGameResult">
+        <collection property="cardGameProductList" notNullColumn="sub_id" javaType="java.util.List" resultMap="CardGameProductResult" />
+        <collection property="cardGameRulesList" notNullColumn="sub_id2" javaType="java.util.List" resultMap="CardGameRulesResult" />
+    </resultMap>
+
+    <resultMap type="CardGameProduct" id="CardGameProductResult">
+        <result property="id"    column="sub_id"    />
+        <result property="gameid"    column="sub_gameid"    />
+        <result property="productid"    column="sub_productid"    />
+        <result property="amount"    column="sub_amount"    />
+    </resultMap>
+
+
+    <resultMap type="CardGameRules" id="CardGameRulesResult">
+        <result property="id"    column="sub_id2"    />
+        <result property="gameid"    column="sub_gameid"    />
+        <result property="userlevel"    column="sub_userlevel"    />
+        <result property="enterTimes"    column="sub_enter_times"    />
+        <result property="goalTimes"    column="sub_goal_times"    />
+        <result property="randomRate"    column="sub_random_rate"    />
+    </resultMap>
+
+    <sql id="selectCardGameVo">
+        select id, title, pic, info, starttime, endtime, type, status from card_game
+    </sql>
+
+    <select id="selectCardGameList" parameterType="CardGame" resultMap="CardGameResult">
+        <include refid="selectCardGameVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="params.beginStarttime != null and params.beginStarttime != '' and params.endStarttime != null and params.endStarttime != ''"> and starttime between #{params.beginStarttime} and #{params.endStarttime}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectCardGameById" parameterType="Integer" resultMap="CardGameCardGameProductsRulesResult">
+        select a.id, a.title, a.pic, a.info, a.starttime, a.endtime, a.type, a.status,
+ b.id as sub_id, b.gameid as sub_gameid, b.productid as sub_productid, b.amount as sub_amount,
+               c.id as sub_id2, c.userlevel as sub_userlevel, c.enter_times as sub_enter_times, c.goal_times as sub_goal_times, c.random_rate as sub_random_rate
+
+        from card_game a
+        left join card_game_product b on b.gameid = a.id
+        left join card_game_rules c on c.gameid = a.id
+
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertCardGame" parameterType="CardGame" useGeneratedKeys="true" keyProperty="id">
+        insert into card_game
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="pic != null">pic,</if>
+            <if test="info != null">info,</if>
+            <if test="starttime != null">starttime,</if>
+            <if test="endtime != null">endtime,</if>
+            <if test="type != null">type,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="pic != null">#{pic},</if>
+            <if test="info != null">#{info},</if>
+            <if test="starttime != null">#{starttime},</if>
+            <if test="endtime != null">#{endtime},</if>
+            <if test="type != null">#{type},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCardGame" parameterType="CardGame">
+        update card_game
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="pic != null">pic = #{pic},</if>
+            <if test="info != null">info = #{info},</if>
+            <if test="starttime != null">starttime = #{starttime},</if>
+            <if test="endtime != null">endtime = #{endtime},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCardGameById" parameterType="Integer">
+        delete from card_game where id = #{id}
+    </delete>
+
+    <delete id="deleteCardGameByIds" parameterType="String">
+        delete from card_game where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteCardGameProductByGameids" parameterType="String">
+        delete from card_game_product where gameid in 
+        <foreach item="gameid" collection="array" open="(" separator="," close=")">
+            #{gameid}
+        </foreach>
+    </delete>
+
+    <delete id="deleteCardGameProductByGameid" parameterType="Integer">
+        delete from card_game_product where gameid = #{gameid}
+    </delete>
+
+    <insert id="batchCardGameProduct">
+        insert into card_game_product( id, gameid, productid, amount) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.gameid}, #{item.productid}, #{item.amount})
+        </foreach>
+    </insert>
+    <delete id="deleteCardGameRulesByGameids" parameterType="String">
+        delete from card_game_rules where gameid in
+        <foreach item="gameid" collection="array" open="(" separator="," close=")">
+            #{gameid}
+        </foreach>
+    </delete>
+
+    <delete id="deleteCardGameRulesByGameid" parameterType="Integer">
+        delete from card_game_rules where gameid = #{gameid}
+    </delete>
+
+    <insert id="batchCardGameRules">
+        insert into card_game_rules( id, gameid, userlevel, enter_times, goal_times, random_rate) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.gameid}, #{item.userlevel}, #{item.enterTimes}, #{item.goalTimes}, #{item.randomRate})
+        </foreach>
+    </insert>
+
+</mapper>

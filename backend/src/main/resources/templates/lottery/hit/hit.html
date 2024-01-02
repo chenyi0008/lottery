@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('中奖用户详情列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>活动主题：</label>
+                                <input type="text" name="title"/>
+                            </li>
+                            <li>
+                                <label>活动类型：</label>
+                                <select name="type" th:with="type=${@dict.getType('card_game_type')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>登录名：</label>
+                                <input type="text" name="uname"/>
+                            </li>
+                            <li>
+                                <label>姓名：</label>
+                                <input type="text" name="realname"/>
+                            </li>
+                            <li>
+                                <label>手机号码：</label>
+                                <input type="text" name="phone"/>
+                            </li>
+                            <li>
+                                <label>用户等级：</label>
+                                <select name="level" th:with="type=${@dict.getType('card_user_level')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>奖品名称：</label>
+                                <input type="text" name="name"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="lottery:hit:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('lottery:hit:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('lottery:hit:remove')}]];
+        var typeDatas = [[${@dict.getType('card_game_type')}]];
+        var levelDatas = [[${@dict.getType('card_user_level')}]];
+        var prefix = ctx + "lottery/hit";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "中奖用户详情",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'title',
+                    title: '活动主题'
+                },
+                {
+                    field: 'type',
+                    title: '活动类型',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(typeDatas, value);
+                    }
+                },
+                {
+                    field: 'uname',
+                    title: '登录名'
+                },
+                {
+                    field: 'realname',
+                    title: '姓名'
+                },
+                {
+                    field: 'idcard',
+                    title: '身份证号'
+                },
+                {
+                    field: 'phone',
+                    title: '手机号码'
+                },
+                {
+                    field: 'level',
+                    title: '用户等级',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(levelDatas, value);
+                    }
+                },
+                {
+                    field: 'name',
+                    title: '奖品名称'
+                },
+                {
+                    field: 'price',
+                    title: '市场价'
+                },
+                {
+                    field: 'hittime',
+                    title: '中奖时间'
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

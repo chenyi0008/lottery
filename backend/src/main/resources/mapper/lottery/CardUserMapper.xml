@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.CardUserMapper">
+    
+    <resultMap type="CardUser" id="CardUserResult">
+        <result property="id"    column="id"    />
+        <result property="uname"    column="uname"    />
+        <result property="pic"    column="pic"    />
+        <result property="passwd"    column="passwd"    />
+        <result property="realname"    column="realname"    />
+        <result property="idcard"    column="idcard"    />
+        <result property="phone"    column="phone"    />
+        <result property="level"    column="level"    />
+        <result property="createtime"    column="createtime"    />
+        <result property="updatetime"    column="updatetime"    />
+    </resultMap>
+
+    <sql id="selectCardUserVo">
+        select id, uname, pic, passwd, realname, idcard, phone, level, createtime, updatetime from card_user
+    </sql>
+
+    <select id="selectCardUserList" parameterType="CardUser" resultMap="CardUserResult">
+        <include refid="selectCardUserVo"/>
+        <where>  
+            <if test="uname != null  and uname != ''"> and uname like concat('%', #{uname}, '%')</if>
+            <if test="realname != null  and realname != ''"> and realname like concat('%', #{realname}, '%')</if>
+            <if test="idcard != null  and idcard != ''"> and idcard like concat('%', #{idcard}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
+            <if test="level != null "> and level = #{level}</if>
+        </where>
+    </select>
+    
+    <select id="selectCardUserById" parameterType="Long" resultMap="CardUserResult">
+        <include refid="selectCardUserVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCardUser" parameterType="CardUser" useGeneratedKeys="true" keyProperty="id">
+        insert into card_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="uname != null and uname != ''">uname,</if>
+            <if test="pic != null">pic,</if>
+            <if test="passwd != null and passwd != ''">passwd,</if>
+            <if test="realname != null">realname,</if>
+            <if test="idcard != null">idcard,</if>
+            <if test="phone != null">phone,</if>
+            <if test="level != null">level,</if>
+            <if test="createtime != null">createtime,</if>
+            <if test="updatetime != null">updatetime,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="uname != null and uname != ''">#{uname},</if>
+            <if test="pic != null">#{pic},</if>
+            <if test="passwd != null and passwd != ''">#{passwd},</if>
+            <if test="realname != null">#{realname},</if>
+            <if test="idcard != null">#{idcard},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="level != null">#{level},</if>
+            <if test="createtime != null">#{createtime},</if>
+            <if test="updatetime != null">#{updatetime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCardUser" parameterType="CardUser">
+        update card_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uname != null and uname != ''">uname = #{uname},</if>
+            <if test="pic != null">pic = #{pic},</if>
+            <if test="passwd != null and passwd != ''">passwd = #{passwd},</if>
+            <if test="realname != null">realname = #{realname},</if>
+            <if test="idcard != null">idcard = #{idcard},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="createtime != null">createtime = #{createtime},</if>
+            <if test="updatetime != null">updatetime = #{updatetime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCardUserById" parameterType="Long">
+        delete from card_user where id = #{id}
+    </delete>
+
+    <delete id="deleteCardUserByIds" parameterType="String">
+        delete from card_user where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

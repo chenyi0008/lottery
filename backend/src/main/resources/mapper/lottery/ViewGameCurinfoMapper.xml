@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.ViewGameCurinfoMapper">
+    
+    <resultMap type="ViewGameCurinfo" id="ViewGameCurinfoResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="starttime"    column="starttime"    />
+        <result property="endtime"    column="endtime"    />
+        <result property="type"    column="type"    />
+        <result property="total"    column="total"    />
+        <result property="hit"    column="hit"    />
+    </resultMap>
+
+    <sql id="selectViewGameCurinfoVo">
+        select id, title, starttime, endtime, type, total, hit from view_game_curinfo
+    </sql>
+
+    <select id="selectViewGameCurinfoList" parameterType="ViewGameCurinfo" resultMap="ViewGameCurinfoResult">
+        <include refid="selectViewGameCurinfoVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectViewGameCurinfoById" parameterType="Integer" resultMap="ViewGameCurinfoResult">
+        <include refid="selectViewGameCurinfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertViewGameCurinfo" parameterType="ViewGameCurinfo">
+        insert into view_game_curinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null">title,</if>
+            <if test="starttime != null">starttime,</if>
+            <if test="endtime != null">endtime,</if>
+            <if test="type != null">type,</if>
+            <if test="total != null">total,</if>
+            <if test="hit != null">hit,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null">#{title},</if>
+            <if test="starttime != null">#{starttime},</if>
+            <if test="endtime != null">#{endtime},</if>
+            <if test="type != null">#{type},</if>
+            <if test="total != null">#{total},</if>
+            <if test="hit != null">#{hit},</if>
+         </trim>
+    </insert>
+
+    <update id="updateViewGameCurinfo" parameterType="ViewGameCurinfo">
+        update view_game_curinfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="starttime != null">starttime = #{starttime},</if>
+            <if test="endtime != null">endtime = #{endtime},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="total != null">total = #{total},</if>
+            <if test="hit != null">hit = #{hit},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteViewGameCurinfoById" parameterType="Integer">
+        delete from view_game_curinfo where id = #{id}
+    </delete>
+
+    <delete id="deleteViewGameCurinfoByIds" parameterType="String">
+        delete from view_game_curinfo where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

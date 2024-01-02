@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.lottery.mapper.CardProductMapper">
+    
+    <resultMap type="CardProduct" id="CardProductResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="pic"    column="pic"    />
+        <result property="info"    column="info"    />
+        <result property="price"    column="price"    />
+    </resultMap>
+
+    <sql id="selectCardProductVo">
+        select id, name, pic, info, price from card_product
+    </sql>
+
+    <select id="selectCardProductList" parameterType="CardProduct" resultMap="CardProductResult">
+        <include refid="selectCardProductVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="beginPrice != null and beginPrice != 0 and endPrice != null and endPrice != 0 "> and price between #{beginPrice} and #{endPrice}</if>
+        </where>
+    </select>
+    
+    <select id="selectCardProductById" parameterType="Integer" resultMap="CardProductResult">
+        <include refid="selectCardProductVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCardProduct" parameterType="CardProduct" useGeneratedKeys="true" keyProperty="id">
+        insert into card_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="pic != null">pic,</if>
+            <if test="info != null">info,</if>
+            <if test="price != null">price,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="pic != null">#{pic},</if>
+            <if test="info != null">#{info},</if>
+            <if test="price != null">#{price},</if>
+         </trim>
+    </insert>
+
+    <update id="updateCardProduct" parameterType="CardProduct">
+        update card_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="pic != null">pic = #{pic},</if>
+            <if test="info != null">info = #{info},</if>
+            <if test="price != null">price = #{price},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCardProductById" parameterType="Integer">
+        delete from card_product where id = #{id}
+    </delete>
+
+    <delete id="deleteCardProductByIds" parameterType="String">
+        delete from card_product where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改活动管理')" />
+    <th:block th:include="include :: datetimepicker-css" />
+    <th:block th:include="include :: bootstrap-fileinput-css"/>
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-game-edit" th:object="${cardGame}">
+            <h4 class="form-header h4">活动管理信息</h4>
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">活动主题：</label>
+                <div class="col-sm-8">
+                    <input name="title" th:field="*{title}" class="form-control" type="text" required>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">宣传图：</label>
+                <div class="col-sm-8">
+                    <input type="hidden" name="pic" th:field="*{pic}">
+                    <div class="file-loading">
+                        <input class="form-control file-upload" id="pic" name="file" type="file">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">活动简介：</label>
+                <div class="col-sm-8">
+                    <textarea name="info" class="form-control">[[*{info}]]</textarea>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">开始时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="starttime" th:value="${#dates.format(cardGame.starttime, 'yyyy-MM-dd HH:mm:ss')}" class="form-control layui-datetime" placeholder="yyyy-MM-dd HH:mm:ss" type="text" required>
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label is-required">结束时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="endtime" th:value="${#dates.format(cardGame.endtime, 'yyyy-MM-dd HH:mm:ss')}" class="form-control layui-datetime" placeholder="yyyy-MM-dd HH:mm:ss" type="text" required>
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">类型：</label>
+                <div class="col-sm-8">
+                    <select name="type" class="form-control m-b" th:with="type=${@dict.getType('card_game_type')}">
+                        <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{type}"></option>
+                    </select>
+                </div>
+            </div>
+            <h4 class="form-header h4">活动奖品信息</h4>
+            <div class="row">
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-white btn-sm" onclick="addRow()"><i class="fa fa-plus"> 增加</i></button>
+                    <button type="button" class="btn btn-white btn-sm" onclick="sub.delRow()"><i class="fa fa-minus"> 删除</i></button>
+                    <div class="col-sm-12 select-table table-striped">
+                        <table id="bootstrap-table"></table>
+                    </div>
+                </div>
+            </div>
+            <br><br><br>
+            <h4 class="form-header h4">活动策略信息</h4>
+            <div class="row">
+                <div class="col-sm-12">
+                    <button type="button" class="btn btn-white btn-sm" onclick="addRow2()"><i class="fa fa-plus"> 增加</i></button>
+                    <button type="button" class="btn btn-white btn-sm" onclick="sub.delRow()"><i class="fa fa-minus"> 删除</i></button>
+                    <div class="col-sm-12 select-table table-striped">
+                        <table id="bootstrap-table2"></table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <th:block th:include="include :: bootstrap-fileinput-js"/>
+    <script th:inline="javascript">
+        var prefix = ctx + "lottery/game";
+        var userlevelDatas = [[${@dict.getType('card_user_level')}]];
+        let productDatas = [];
+        $("#form-game-edit").validate({
+            focusCleanup: true
+        });
+        $.ajax({
+            url: ctx+'lottery/product/list',
+            type: "POST",
+            data: { pageSize: 1000 },
+            async: false,
+            success: function(data) {
+                data.rows.forEach(function (v){
+                    productDatas.push({dictValue:v.id,dictLabel:v.name});
+                });
+                console.log(productDatas);
+            }
+        });
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-game-edit').serialize());
+            }
+        }
+
+        $(".file-upload").each(function (i) {
+            var val = $("input[name='" + this.id + "']").val()
+            $(this).fileinput({
+                'uploadUrl': ctx + 'common/upload',
+                initialPreviewAsData: true,
+                initialPreview: [val],
+                maxFileCount: 1,
+                autoReplace: true
+            }).on('fileuploaded', function (event, data, previewId, index) {
+                $("input[name='" + event.currentTarget.id + "']").val(data.response.url)
+            }).on('fileremoved', function (event, id, index) {
+                $("input[name='" + event.currentTarget.id + "']").val('')
+            })
+            $(this).fileinput('_initFileActions');
+        });
+
+        $(function() {
+            var options = {
+                id: 'bootstrap-table',
+                data: [[${cardGame.cardGameProductList}]],
+                pagination: false,
+                showSearch: false,
+                showRefresh: false,
+                showToggle: false,
+                showColumns: false,
+                sidePagination: "client",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'index',
+                    align: 'center',
+                    title: "序号",
+                    formatter: function (value, row, index) {
+                    	var columnIndex = $.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
+                    	return columnIndex + $.table.serialNumber(index);
+                    }
+                },
+                {
+                    field: 'productid',
+                    align: 'center',
+                    title: '奖品',
+                    formatter: function(value, row, index) {
+                        var name = $.common.sprintf("cardGameProductList[%s].productid", index);
+                        return $.common.dictToSelect(productDatas, value, name);
+                    }
+                },
+
+                {
+                    field: 'amount',
+                    align: 'center',
+                    title: '数量',
+                    formatter: function(value, row, index) {
+                        var html = $.common.sprintf("<input class='form-control' type='text' name='cardGameProductList[%s].amount' value='%s'>", index, value);
+                        return html;
+                    }
+                },
+
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var value = $.common.isNotEmpty(row.index) ? row.index : $.table.serialNumber(index);
+                        return '<a class="btn btn-danger btn-xs" href="javascript:void(0)" onclick="sub.delRowByIndex(\'' + value + '\',\'bootstrap-table\')"><i class="fa fa-remove"></i>删除</a>';
+                    }
+                }]
+            };
+            var options2 = {
+                id: 'bootstrap-table2',
+                data: [[${cardGame.cardGameRulesList}]],
+                pagination: false,
+                showSearch: false,
+                showRefresh: false,
+                showToggle: false,
+                showColumns: false,
+                sidePagination: "client",
+                columns: [{
+                    checkbox: true
+                },
+                    {
+                        field: 'index',
+                        align: 'center',
+                        title: "序号",
+                        formatter: function (value, row, index) {
+                            var columnIndex = $.common.sprintf("<input type='hidden' name='index' value='%s'>", $.table.serialNumber(index));
+                            return columnIndex + $.table.serialNumber(index);
+                        }
+                    },
+                    {
+                        field: 'userlevel',
+                        align: 'center',
+                        title: '会员等级',
+                        formatter: function(value, row, index) {
+                            var name = $.common.sprintf("cardGameRulesList[%s].userlevel", index);
+                            return $.common.dictToSelect(userlevelDatas, value, name);
+                        }
+                    },
+                    {
+                        field: 'enterTimes',
+                        align: 'center',
+                        title: '可抽奖次数',
+                        formatter: function(value, row, index) {
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='cardGameRulesList[%s].enterTimes' value='%s'>", index, value);
+                            return html;
+                        }
+                    },
+
+                    {
+                        field: 'goalTimes',
+                        align: 'center',
+                        title: '最大中奖次数',
+                        formatter: function(value, row, index) {
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='cardGameRulesList[%s].goalTimes' value='%s'>", index, value);
+                            return html;
+                        }
+                    },
+
+                    {
+                        field: 'randomRate',
+                        align: 'center',
+                        title: '如果是概率类，多大中奖率',
+                        formatter: function(value, row, index) {
+                            var html = $.common.sprintf("<input class='form-control' type='text' name='cardGameRulesList[%s].randomRate' value='%s'>", index, value);
+                            return html;
+                        }
+                    },
+
+                    {
+                        title: '操作',
+                        align: 'center',
+                        formatter: function(value, row, index) {
+                            var value = $.common.isNotEmpty(row.index) ? row.index : $.table.serialNumber(index);
+                            return '<a class="btn btn-danger btn-xs" href="javascript:void(0)" onclick="sub.delRowByIndex(\'' + value + '\',\'bootstrap-table2\')"><i class="fa fa-remove"></i>删除</a>';
+                        }
+                    }]
+            };
+            $.table.init(options);
+            $.table.init(options2);
+        });
+
+        function addRow() {
+            var count = $("#bootstrap-table").bootstrapTable('getData').length;
+            var row = {
+                index: $.table.serialNumber(count),
+                productid: "",
+                amount: "",
+            }
+            sub.addRow(row,"bootstrap-table");
+        }
+        function addRow2() {
+            var count = $("#bootstrap-table2").bootstrapTable('getData').length;
+            var row = {
+                index: $.table.serialNumber(count),
+                productid: "",
+                amount: "",
+            }
+            sub.addRow(row,"bootstrap-table2");
+        }
+    </script>
+</body>
+</html>
