@@ -11,7 +11,7 @@
 
     <groupId>com.itheima.prize</groupId>
     <artifactId>backend</artifactId>
-    <version>4.7.8</version>
+    <version>0.0.1-SNAPSHOT</version>
 
 
     <properties>
