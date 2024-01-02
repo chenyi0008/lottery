@@ -123,9 +123,9 @@ services:
       - lottery-minio
     environment:
       server.port: 8080
-      spring.datasource.master.url: jdbc:mysql://lottery-mysql/prize?useUnicode=true&characterEncoding=utf-8
-      spring.datasource.master.username: root
-      spring.datasource.master.password: root
+      spring.datasource.druid.master.url: jdbc:mysql://lottery-mysql/prize?useUnicode=true&characterEncoding=utf-8
+      spring.datasource.druid.master.username: root
+      spring.datasource.druid.master.password: root
       minio.url: http://116.62.213.90:9005
       minio.host: lottery-minio
       minio.port: 9000
