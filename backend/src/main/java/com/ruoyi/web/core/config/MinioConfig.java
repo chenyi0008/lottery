@@ -2,6 +2,8 @@ package com.ruoyi.web.core.config;
 
 import io.minio.MinioClient;
 import io.minio.org.apache.commons.validator.routines.InetAddressValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,6 +16,8 @@ import java.net.InetAddress;
 @Configuration
 @ConfigurationProperties(prefix = "minio")
 public class MinioConfig {
+    final static Logger logger = LoggerFactory.getLogger(MinioConfig.class);
+    
     private static String host;
     private static String port;
     private static String bucket;
@@ -27,24 +31,24 @@ public class MinioConfig {
     public MinioClient minioClient() throws Exception {
         //minio的初始化存在一个小问题，endpoint必须是ip形式，不能是host
         if (!InetAddressValidator.getInstance().isValid(host)){
-            System.out.println("MinIO:host is not format as ip，change it！");
+            logger.info("MinIO:host is not format as ip，change it！");
             InetAddress inetAddress = InetAddress.getByName(host);
             host = inetAddress.getHostAddress();
-            System.out.println("MinIO:host change to : " + host);
+            logger.info("MinIO:host change to : {}" , host);
         }
         MinioClient minioClient = new MinioClient(host,
                 Integer.valueOf(port),
                 username,
                 password,false);
 
-//        System.out.println("minio connected, buckets="+minioClient.listBuckets());
+//        logger.info("minio connected, buckets="+minioClient.listBuckets());
 
         boolean found = minioClient.bucketExists(bucket);
         if (!found) {
             // 创建桶
             minioClient.makeBucket(bucket);
         }
-        System.out.println("MinIO:bucket init ok , bucket="+bucket);
+        logger.info("MinIO:bucket init ok , bucket={}" , bucket);
         return minioClient;
     }
 
