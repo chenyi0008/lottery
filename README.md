@@ -22,6 +22,16 @@
 
 #### 服务器一键启动（docker-compose）
 
+代码中的deploy文件夹下已经集成了docker-compose一键部署
+
+确保：
+
+1、将代码打包拷贝到服务器，或者直接从服务器上 git clone
+
+2、服务器上安装了docker及docker-compose
+
+
+
 ##### 1、打包镜像
 
 ====> 到backend下：
