@@ -6,8 +6,8 @@
 # https://github.com/Sequel-Ace/Sequel-Ace
 #
 # 主机: prize (MySQL 5.7.43)
-# 数据库: ry
-# 生成时间: 2024-01-02 上午10:13:10 +0000
+# 数据库: prize
+# 生成时间: 2024-01-03 上午3:41:24 +0000
 # ************************************************************
 
 
@@ -101,18 +101,14 @@ VALUES
 	(206,66,5,33),
 	(207,66,6,44),
 	(208,66,4,112),
-	(217,7,4,10),
-	(218,7,7,20),
-	(219,7,8,30),
-	(220,7,4,2),
-	(221,7,4,4),
-	(222,7,4,5),
-	(223,7,4,3),
-	(224,7,4,4),
 	(225,44,4,111),
 	(226,44,5,111),
 	(227,44,7,111),
-	(228,44,8,111);
+	(228,44,8,111),
+	(237,7,4,10),
+	(238,7,7,20),
+	(239,7,8,30),
+	(240,7,4,2);
 
 /*!40000 ALTER TABLE `card_game_product` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -131,6 +127,7 @@ CREATE TABLE `card_game_rules` (
   `goal_times` smallint(6) NOT NULL DEFAULT '0' COMMENT '最大中奖次数（0为不限）',
   `random_rate` tinyint(4) NOT NULL DEFAULT '100' COMMENT '如果是概率类，多大中奖率（0-100），默认100',
   PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `gameid` (`gameid`,`userlevel`),
   KEY `card_game_rules_fk` (`gameid`),
   CONSTRAINT `card_game_rules_fk` FOREIGN KEY (`gameid`) REFERENCES `card_game` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='活动策略';
@@ -144,13 +141,13 @@ VALUES
 	(70,46,2,2,3,5),
 	(98,66,1,13,24,35),
 	(99,66,2,5,6,7),
-	(104,7,1,3,3,3),
-	(105,7,2,4,5,6),
-	(106,7,0,2,3,3),
-	(107,7,3,2,3,4),
 	(108,44,0,1,6,7),
 	(109,44,2,2,5,8),
-	(110,44,1,3,4,9);
+	(110,44,1,3,4,9),
+	(120,7,1,3,3,3),
+	(121,7,2,4,5,6),
+	(122,7,0,2,3,3),
+	(123,7,3,2,3,4);
 
 /*!40000 ALTER TABLE `card_game_rules` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -215,9 +212,9 @@ LOCK TABLES `card_user` WRITE;
 INSERT INTO `card_user` (`id`, `uname`, `pic`, `passwd`, `realname`, `idcard`, `phone`, `level`, `createtime`, `updatetime`)
 VALUES
 	(14,'shawn','http://116.62.213.90:9005/prize/1701763890730.jpeg','1','wsw','1','13355556666',3,'2019-10-31 11:24:25','2023-12-29 17:12:48'),
-	(20,'bxg','http://116.62.213.90:9005/prize/1701763881362.jpeg','-7fa723a043f8f629d8629dfbd0e5d571','bxg','1','13111111111',3,'2023-11-15 09:29:04','2023-12-29 15:44:46'),
+	(20,'bxg','http://116.62.213.90:9005/prize/1701763881362.jpeg','-7fa723a043f8f629d8629dfbd0e5d571','bxg','1','13111111111',4,'2023-11-15 09:29:04','2024-01-03 11:20:07'),
 	(21,'wxm','http://116.62.213.90:9005/prize/20231229154329A001.jpg','wxm','王小猫','','13322332233',0,'2023-12-29 15:43:47','2023-12-29 15:44:05'),
-	(23,'bxg21','http://116.62.213.90:9005/prize/20240102093310A001.jpg','202cb962ac59075b964b07152d234b70','','','',2,'2023-12-29 17:37:19','2024-01-02 09:35:56');
+	(23,'bxg21','http://116.62.213.90:9005/prize/20240102093310A001.jpg','202cb962ac59075b964b07152d234b70','奶茶','321321','13355556666',4,'2023-12-29 17:37:19','2024-01-03 11:19:31');
 
 /*!40000 ALTER TABLE `card_user` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -522,7 +519,8 @@ CREATE TABLE `sys_dict_data` (
   `update_by` varchar(64) DEFAULT '' COMMENT '更新者',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) DEFAULT NULL COMMENT '备注',
-  PRIMARY KEY (`dict_code`)
+  PRIMARY KEY (`dict_code`),
+  UNIQUE KEY `dict_type` (`dict_type`,`dict_value`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='字典数据表';
 
 LOCK TABLES `sys_dict_data` WRITE;
@@ -567,7 +565,8 @@ VALUES
 	(105,2,'二级会员','2','card_user_level',NULL,NULL,'N','0','admin','2023-12-27 16:42:28','',NULL,NULL),
 	(106,3,'三级会员','3','card_user_level','','','N','0','admin','2023-12-27 16:42:38','admin','2023-12-27 16:42:43',''),
 	(107,0,'新建','0','card_game_status',NULL,NULL,'Y','0','admin','2023-12-28 13:42:45','',NULL,NULL),
-	(108,1,'已加载','1','card_game_status',NULL,NULL,'Y','0','admin','2023-12-28 13:42:55','',NULL,NULL);
+	(108,1,'已加载','1','card_game_status',NULL,NULL,'Y','0','admin','2023-12-28 13:42:55','',NULL,NULL),
+	(122,4,'金牌会员','4','card_user_level',NULL,NULL,'N','0','','2024-01-03 11:19:08','',NULL,NULL);
 
 /*!40000 ALTER TABLE `sys_dict_data` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -806,19 +805,19 @@ VALUES
 	(1060,'预览代码',115,4,'#','','F','0','1','tool:gen:preview','#','admin','2023-12-27 12:02:45','',NULL,''),
 	(1061,'生成代码',115,5,'#','','F','0','1','tool:gen:code','#','admin','2023-12-27 12:02:45','',NULL,''),
 	(2000,'活动管理',0,0,'#','menuItem','M','0','1','','fa fa-cubes','admin','2023-12-27 15:14:27','admin','2023-12-29 18:14:21',''),
-	(2001,'奖品管理',2000,1,'/lottery/product','','C','0','1','lottery:product:view','#','admin','2023-12-27 15:23:39','',NULL,'奖品管理菜单'),
+	(2001,'奖品管理',2000,20,'/lottery/product','menuItem','C','0','1','lottery:product:view','#','admin','2023-12-27 15:23:39','admin','2024-01-03 11:03:30','奖品管理菜单'),
 	(2002,'奖品管理查询',2001,1,'#','','F','0','1','lottery:product:list','#','admin','2023-12-27 15:23:39','',NULL,''),
 	(2003,'奖品管理新增',2001,2,'#','','F','0','1','lottery:product:add','#','admin','2023-12-27 15:23:39','',NULL,''),
 	(2004,'奖品管理修改',2001,3,'#','','F','0','1','lottery:product:edit','#','admin','2023-12-27 15:23:39','',NULL,''),
 	(2005,'奖品管理删除',2001,4,'#','','F','0','1','lottery:product:remove','#','admin','2023-12-27 15:23:39','',NULL,''),
 	(2006,'奖品管理导出',2001,5,'#','','F','0','1','lottery:product:export','#','admin','2023-12-27 15:23:39','',NULL,''),
-	(2007,'活动配置',2000,2,'/lottery/game','menuItem','C','0','1','lottery:game:view','#','admin','2023-12-27 16:32:29','admin','2024-01-02 11:23:23','活动管理菜单'),
+	(2007,'活动配置',2000,30,'/lottery/game','menuItem','C','0','1','lottery:game:view','#','admin','2023-12-27 16:32:29','admin','2024-01-03 11:03:44','活动管理菜单'),
 	(2008,'活动管理查询',2007,1,'#','','F','0','1','lottery:game:list','#','admin','2023-12-27 16:32:29','',NULL,''),
 	(2009,'活动管理新增',2007,2,'#','','F','0','1','lottery:game:add','#','admin','2023-12-27 16:32:29','',NULL,''),
 	(2010,'活动管理修改',2007,3,'#','','F','0','1','lottery:game:edit','#','admin','2023-12-27 16:32:29','',NULL,''),
 	(2011,'活动管理删除',2007,4,'#','','F','0','1','lottery:game:remove','#','admin','2023-12-27 16:32:30','',NULL,''),
 	(2012,'活动管理导出',2007,5,'#','','F','0','1','lottery:game:export','#','admin','2023-12-27 16:32:30','',NULL,''),
-	(2019,'会员管理',2000,0,'/lottery/user','menuItem','C','0','1','lottery:user:view','#','admin','2023-12-29 15:34:09','admin','2023-12-29 17:42:19','会员信息菜单'),
+	(2019,'会员管理',2000,10,'/lottery/user','menuItem','C','0','1','lottery:user:view','#','admin','2023-12-29 15:34:09','admin','2024-01-03 11:02:55','会员信息菜单'),
 	(2020,'会员信息查询',2019,1,'#','','F','0','1','lottery:user:list','#','admin','2023-12-29 15:34:09','',NULL,''),
 	(2021,'会员信息新增',2019,2,'#','','F','0','1','lottery:user:add','#','admin','2023-12-29 15:34:09','',NULL,''),
 	(2022,'会员信息修改',2019,3,'#','','F','0','1','lottery:user:edit','#','admin','2023-12-29 15:34:09','',NULL,''),
@@ -830,7 +829,13 @@ VALUES
 	(2028,'活动中奖统计导出',2026,5,'#','','F','0','1','lottery:curinfo:export','#','admin','2024-01-02 11:12:55','',NULL,''),
 	(2029,'中奖用户详情',2025,1,'/lottery/hit','','C','0','1','lottery:hit:view','#','admin','2024-01-02 11:20:47','',NULL,'中奖用户详情菜单'),
 	(2030,'中奖用户详情查询',2029,1,'#','','F','0','1','lottery:hit:list','#','admin','2024-01-02 11:20:47','',NULL,''),
-	(2031,'中奖用户详情导出',2029,5,'#','','F','0','1','lottery:hit:export','#','admin','2024-01-02 11:20:47','',NULL,'');
+	(2031,'中奖用户详情导出',2029,5,'#','','F','0','1','lottery:hit:export','#','admin','2024-01-02 11:20:47','',NULL,''),
+	(2032,'会员等级',2000,9,'/lottery/data','menuItem','C','0','1','lottery:data:view','#','admin','2024-01-03 10:19:41','admin','2024-01-03 11:03:16','会员等级管理菜单'),
+	(2033,'会员等级管理查询',2032,1,'#','','F','0','1','lottery:data:list','#','admin','2024-01-03 10:19:41','',NULL,''),
+	(2034,'会员等级管理新增',2032,2,'#','','F','0','1','lottery:data:add','#','admin','2024-01-03 10:19:41','',NULL,''),
+	(2035,'会员等级管理修改',2032,3,'#','','F','0','1','lottery:data:edit','#','admin','2024-01-03 10:19:41','',NULL,''),
+	(2036,'会员等级管理删除',2032,4,'#','','F','0','1','lottery:data:remove','#','admin','2024-01-03 10:19:41','',NULL,''),
+	(2037,'会员等级管理导出',2032,5,'#','','F','0','1','lottery:data:export','#','admin','2024-01-03 10:19:41','',NULL,'');
 
 /*!40000 ALTER TABLE `sys_menu` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -959,7 +964,7 @@ INSERT INTO `sys_role` (`role_id`, `role_name`, `role_key`, `role_sort`, `data_s
 VALUES
 	(1,'超级管理员','admin',1,'1','0','0','admin','2023-12-27 12:02:42','',NULL,'超级管理员'),
 	(2,'普通角色','common',2,'5','0','0','admin','2023-12-27 12:02:42','admin','2023-12-28 12:05:22','普通角色'),
-	(100,'活动运营','yunying',3,'1','0','0','admin','2024-01-02 09:50:08','admin','2024-01-02 11:59:51','');
+	(100,'活动运营','yunying',3,'1','0','0','admin','2024-01-02 09:50:08','admin','2024-01-03 11:04:13','');
 
 /*!40000 ALTER TABLE `sys_role` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1125,7 +1130,13 @@ VALUES
 	(100,2028),
 	(100,2029),
 	(100,2030),
-	(100,2031);
+	(100,2031),
+	(100,2032),
+	(100,2033),
+	(100,2034),
+	(100,2035),
+	(100,2036),
+	(100,2037);
 
 /*!40000 ALTER TABLE `sys_role_menu` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1166,9 +1177,9 @@ LOCK TABLES `sys_user` WRITE;
 
 INSERT INTO `sys_user` (`user_id`, `dept_id`, `login_name`, `user_name`, `user_type`, `email`, `phonenumber`, `sex`, `avatar`, `password`, `salt`, `status`, `del_flag`, `login_ip`, `login_date`, `pwd_update_date`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`)
 VALUES
-	(1,103,'admin','超级管理员','00','ry@163.com','15888888888','1','/profile/avatar/2023/12/27/blob_20231227121211A002.png','cd5c653aad9c947add80dd5b74dec949','56f88c','0','0','127.0.0.1','2024-01-02 11:59:03','2024-01-02 09:47:00','admin','2023-12-27 12:02:41','','2024-01-02 11:59:02','管理员'),
+	(1,103,'admin','超级管理员','00','ry@163.com','15888888888','1','/profile/avatar/2023/12/27/blob_20231227121211A002.png','cd5c653aad9c947add80dd5b74dec949','56f88c','0','0','127.0.0.1','2024-01-03 11:02:10','2024-01-02 09:47:00','admin','2023-12-27 12:02:41','','2024-01-03 11:02:10','管理员'),
 	(2,105,'ry','测试用户','00','ry@qq.com','15666666666','1','','13df7e5e78d714ca0e27b7640981eb4f','722576','0','0','127.0.0.1','2023-12-27 12:02:42','2023-12-27 12:02:42','admin','2023-12-27 12:02:42','','2023-12-28 12:02:06','测试员'),
-	(100,103,'user','user','00','','','0','','e4c40195f1543bbbd722ef47540ca7c4','c548a7','0','0','127.0.0.1','2024-01-02 18:09:05',NULL,'admin','2024-01-02 09:48:04','admin','2024-01-02 18:09:05','');
+	(100,103,'user','user','00','','','0','','e4c40195f1543bbbd722ef47540ca7c4','c548a7','0','0','127.0.0.1','2024-01-03 11:14:44',NULL,'admin','2024-01-02 09:48:04','admin','2024-01-03 11:14:43','');
 
 /*!40000 ALTER TABLE `sys_user` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1199,7 +1210,7 @@ LOCK TABLES `sys_user_online` WRITE;
 
 INSERT INTO `sys_user_online` (`sessionId`, `login_name`, `dept_name`, `ipaddr`, `login_location`, `browser`, `os`, `status`, `start_timestamp`, `last_access_time`, `expire_time`)
 VALUES
-	('7456a6a4-e1d3-44d2-9698-e419fe0f8096','user','研发部门','127.0.0.1','内网IP','Safari','Mac OS X','on_line','2024-01-02 18:07:13','2024-01-02 18:10:11',1800000);
+	('c6a2677f-be11-48bf-b665-9142e9b5f680','user','研发部门','127.0.0.1','内网IP','Safari','Mac OS X','on_line','2024-01-03 10:32:22','2024-01-03 11:35:36',1800000);
 
 /*!40000 ALTER TABLE `sys_user_online` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -1256,7 +1267,6 @@ UNLOCK TABLES;
 
 
 
-
 # 导出视图 view_game_hitnum
 # ------------------------------------------------------------
 
@@ -1266,6 +1276,7 @@ CREATE VIEW `view_game_hitnum`
 AS SELECT
    `card_user_hit`.`gameid` AS `gameid`,count(`card_user_hit`.`id`) AS `num`
 FROM `card_user_hit` group by `card_user_hit`.`gameid`;
+
 
 
 
