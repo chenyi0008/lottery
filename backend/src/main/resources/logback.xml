@@ -6,7 +6,7 @@
     <!-- 控制台输出 -->
     <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%C.%M\(%F:%L\):%clr([%level %d{HH:mm:ss.SSS}]) %msg%n</pattern>
+            <pattern>%clr([%d{HH:mm:ss.SSS}]) %msg %clr([%level]) %C.%M\(%F:%L\)%n</pattern>
         </encoder>
     </appender>
 
