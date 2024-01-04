@@ -31,7 +31,7 @@ public class MinioConfig {
     public MinioClient minioClient() throws Exception {
         //minio的初始化存在一个小问题，endpoint必须是ip形式，不能是host
         if (!InetAddressValidator.getInstance().isValid(host)){
-            logger.info("MinIO:host is not format as ip，change it！");
+            logger.warn("MinIO:host is not format as ip，change it！");
             InetAddress inetAddress = InetAddress.getByName(host);
             host = inetAddress.getHostAddress();
             logger.info("MinIO:host change to : {}" , host);

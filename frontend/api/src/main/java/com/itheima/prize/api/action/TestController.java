@@ -97,7 +97,7 @@ public class TestController {
     public ApiResult reset(@PathVariable int gameid){
         CardGame game = gameService.getById(gameid);
         game.setStatus(0);
-        game.setStarttime(DateUtils.addMinutes(new Date(),2));
+        game.setStarttime(DateUtils.addMinutes(new Date(),1));
         game.setEndtime(DateUtils.addMinutes(new Date(),30));
         gameService.updateById(game);
 
