@@ -24,7 +24,7 @@ public class PrizeGameReceiver {
     @RabbitHandler
     public void processMessage(String message) {
         logger.info("user play : msg={}" , message);
-        cardUserGameService.save( JSON.parseObject(message,CardUserGame.class));
+        //TODO
     }
 
 }

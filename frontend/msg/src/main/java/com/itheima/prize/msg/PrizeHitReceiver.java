@@ -23,6 +23,6 @@ public class PrizeHitReceiver {
     @RabbitHandler
     public void processMessage(String message) {
         logger.info("user hit : message={}", message);
-        hitService.save(JSON.parseObject(message, CardUserHit.class));
+        //TODO
     }
 }

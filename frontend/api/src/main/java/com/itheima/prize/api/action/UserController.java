@@ -39,16 +39,8 @@ public class UserController {
     @GetMapping("/info")
     @ApiOperation(value = "用户信息")
     public ApiResult info(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        CardUser user = (CardUser) session.getAttribute("user");
-        if (user == null){
-            return new ApiResult(0, "登录超时",null);
-        }else {
-            CardUserDto dto = new CardUserDto(user);
-            dto.setGames(loadService.getGamesNumByUserId(user.getId()));
-            dto.setProducts(loadService.getPrizesNumByUserId(user.getId()));
-            return new ApiResult(1, "成功",dto);
-        }
+        //TODO
+        return null;
     }
 
     @GetMapping("/hit/{gameid}/{curpage}/{limit}")
@@ -59,16 +51,8 @@ public class UserController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3")
     })
     public ApiResult hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit,HttpServletRequest request) {
-        HttpSession session = request.getSession();
-        CardUser user = (CardUser) session.getAttribute("user");
-        QueryWrapper<ViewCardUserHit> wrapper = new QueryWrapper<>();
-        wrapper.eq("userid",user.getId());
-        if (gameid != -1){
-            wrapper.eq("gameid",gameid);
-        }
-        Page<ViewCardUserHit> all = hitService.page(new Page(curpage,limit),wrapper);
-        return new ApiResult(1, "成功",new PageBean<ViewCardUserHit>(all));
-
+        //TODO
+        return null;
     }
 
 

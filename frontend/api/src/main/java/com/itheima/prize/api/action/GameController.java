@@ -45,28 +45,8 @@ public class GameController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3",required = true)
     })
     public ApiResult list(@PathVariable int status,@PathVariable int curpage,@PathVariable int limit) {
-        Date now = new Date();
-        QueryWrapper<CardGame> gameQueryWrapper = new QueryWrapper<>();
-        switch (status) {
-            case -1:
-                //查全部
-                break;
-            case 0:
-                //未开始
-                gameQueryWrapper.gt("starttime",now);
-                break;
-            case 1:
-                //进行中
-                gameQueryWrapper.le("starttime",now).gt("endtime",now);
-                break;
-            case 2:
-                //已结束
-                gameQueryWrapper.le("endtime",now);
-                break;
-        }
-        gameQueryWrapper.orderByDesc("starttime");
-        Page<CardGame> page = gameService.page(new Page<>(curpage,limit),gameQueryWrapper);
-        return new ApiResult(1,"成功",new PageBean<CardGame>(page));
+        //TODO
+        return null;
     }
 
     @GetMapping("/info/{gameid}")
@@ -75,7 +55,8 @@ public class GameController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<CardGame> info(@PathVariable int gameid) {
-        return new ApiResult(1,"成功",gameService.getById(gameid));
+        //TODO
+        return null;
     }
 
     @GetMapping("/products/{gameid}")
@@ -84,7 +65,8 @@ public class GameController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<List<CardProductDto>> products(@PathVariable int gameid) {
-        return new ApiResult(1,"成功",loadService.getByGameId(gameid));
+        //TODO
+        return null;
     }
 
     @GetMapping("/hit/{gameid}/{curpage}/{limit}")
@@ -95,10 +77,8 @@ public class GameController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3",required = true)
     })
     public ApiResult<PageBean<ViewCardUserHit>> hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit) {
-        QueryWrapper<ViewCardUserHit> wrapper = new QueryWrapper<>();
-        wrapper.eq("gameid",gameid);
-        Page<ViewCardUserHit> page = hitService.page(new Page<ViewCardUserHit>(curpage,limit),wrapper);
-        return new ApiResult(1, "成功",new PageBean<ViewCardUserHit>(page));
+        //TODO
+        return null;
     }
 
 
