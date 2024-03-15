@@ -37,6 +37,7 @@ public class GameTask {
 
     @Scheduled(cron = "0 * * * * ?")
     public void execute() {
+        System.out.printf("scheduled!"+new Date());
         //TODO
     }
 }
