@@ -130,4 +130,11 @@ public class TestController {
     public ViewCardUserHit demo4(){
         return new ViewCardUserHit();
     }
+
+    @GetMapping("/demo/test")
+    @ApiOperation(value = "通过mybatis读取数据库的数据展示")
+    public List<CardGame> Test(){
+        List<CardGame> list = gameService.list();
+        return list;
+    }
 }

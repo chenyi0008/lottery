@@ -1,6 +1,9 @@
 package com.itheima.prize.api.action;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.itheima.prize.commons.config.RedisKeys;
 import com.itheima.prize.commons.db.entity.CardUser;
 import com.itheima.prize.commons.db.mapper.CardUserMapper;
@@ -29,6 +32,9 @@ public class LoginController {
     @Autowired
     private RedisUtil redisUtil;
 
+    static private String loginPrefix = "login account:";
+    static private String UserInfoPrefix = "user";
+
     @PostMapping("/login")
     @ApiOperation(value = "登录")
     @ApiImplicitParams({
@@ -36,15 +42,32 @@ public class LoginController {
             @ApiImplicitParam(name="password",value = "密码",required = true)
     })
     public ApiResult login(HttpServletRequest request, @RequestParam String account,@RequestParam String password) {
-        //TODO
-        return null;
+        HttpSession session = request.getSession();
+        Integer loginTimes = (Integer)redisUtil.get(loginPrefix + account);
+        if (loginTimes != null && loginTimes >= 5)return new ApiResult(0, "密码错误5次，请5分钟后再登录", null);
+
+        LambdaQueryWrapper<CardUser> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(CardUser::getUname, account);
+        CardUser user = userService.getOne(lqw);
+        String encryptPassword = PasswordUtil.encodePassword(password);
+        if(user == null || !user.getPasswd().equals(encryptPassword)){
+            if(loginTimes == null)redisUtil.set(loginPrefix + account, 1, 5 * 60);
+            else redisUtil.set(loginPrefix + account, loginTimes + 1, 5 * 60);
+            return new ApiResult(0, "账户名或密码错误", null);
+        }
+        user.setPasswd(null);
+        session.setAttribute(UserInfoPrefix, user);
+        return new ApiResult<>(1, "登录成功", user);
+
+
     }
 
     @GetMapping("/logout")
     @ApiOperation(value = "退出")
     public ApiResult logout(HttpServletRequest request) {
-        //TODO
-        return null;
+        HttpSession session = request.getSession();
+        session.setAttribute(UserInfoPrefix, null);
+        return new ApiResult<>(1, "退出成功", null);
     }
 
 }
