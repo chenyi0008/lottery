@@ -1,5 +1,6 @@
 package com.itheima.prize.api.action;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.itheima.prize.commons.db.entity.CardGame;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.smartcardio.Card;
 import java.util.Date;
 import java.util.List;
 
@@ -45,8 +47,12 @@ public class GameController {
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3",required = true)
     })
     public ApiResult list(@PathVariable int status,@PathVariable int curpage,@PathVariable int limit) {
-        //TODO
-        return null;
+        LambdaQueryWrapper<CardGame> lqw = new LambdaQueryWrapper<>();
+        if(status != -1){
+            lqw.eq(CardGame::getStatus, status);
+        }
+        Page<CardGame> page = gameService.page(new Page<>(curpage, limit), lqw);
+        return new ApiResult(1, "成功", new PageBean<>(page));
     }
 
     @GetMapping("/info/{gameid}")
@@ -55,8 +61,8 @@ public class GameController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<CardGame> info(@PathVariable int gameid) {
-        //TODO
-        return null;
+        CardGame res = gameService.getById(gameid);
+        return new ApiResult(1, "成功", res);
     }
 
     @GetMapping("/products/{gameid}")
@@ -65,8 +71,8 @@ public class GameController {
             @ApiImplicitParam(name="gameid",value = "活动id",example = "1",required = true)
     })
     public ApiResult<List<CardProductDto>> products(@PathVariable int gameid) {
-        //TODO
-        return null;
+        List<CardProductDto> res = loadService.getByGameId(gameid);
+        return new ApiResult(1, "成功", res);
     }
 
     @GetMapping("/hit/{gameid}/{curpage}/{limit}")
@@ -76,9 +82,11 @@ public class GameController {
             @ApiImplicitParam(name = "curpage",value = "第几页",defaultValue = "1",dataType = "int", example = "1",required = true),
             @ApiImplicitParam(name = "limit",value = "每页条数",defaultValue = "10",dataType = "int",example = "3",required = true)
     })
-    public ApiResult<PageBean<ViewCardUserHit>> hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit) {
-        //TODO
-        return null;
+    public ApiResult hit(@PathVariable int gameid,@PathVariable int curpage,@PathVariable int limit) {
+        LambdaQueryWrapper<CardGame> lqw = new LambdaQueryWrapper<>();
+        lqw.eq(CardGame::getId, gameid);
+        Page<CardGame> page = gameService.page(new Page<>(curpage, limit), lqw);
+        return new ApiResult(1, "成功", new PageBean<>(page));
     }
 
 
