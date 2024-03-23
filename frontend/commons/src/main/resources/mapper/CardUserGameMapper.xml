@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.itheima.prize.commons.db.mapper.CardUserGameMapper">
+<mapper namespace="com.chenyi.prize.commons.db.mapper.CardUserGameMapper">
 
-    <resultMap id="BaseResultMap" type="com.itheima.prize.commons.db.entity.CardUserGame">
+    <resultMap id="BaseResultMap" type="com.chenyi.prize.commons.db.entity.CardUserGame">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="userid" column="userid" jdbcType="INTEGER"/>
             <result property="gameid" column="gameid" jdbcType="INTEGER"/>
