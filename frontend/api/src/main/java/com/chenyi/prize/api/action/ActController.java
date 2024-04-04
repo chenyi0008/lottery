@@ -2,6 +2,8 @@ package com.chenyi.prize.api.action;
 
 import com.alibaba.fastjson.JSON;
 import com.chenyi.prize.api.config.LuaScript;
+import com.chenyi.prize.commons.annotition.limit.Limit;
+import com.chenyi.prize.commons.annotition.limit.LimitType;
 import com.chenyi.prize.commons.db.entity.*;
 import com.chenyi.prize.commons.config.RabbitKeys;
 import com.chenyi.prize.commons.config.RedisKeys;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
 
 @RestController
 @RequestMapping("/api/act")
@@ -44,6 +47,7 @@ public class ActController {
     static int defaultMaxEnterTime = 10;
     static int defaultMaxGoalTime = 20;
 
+    @Limit(key = "lottery", limitType = LimitType.CUSTOMER, name = "抽奖", period = 10, count = 5)
     @GetMapping("/go/{gameid}")
     @ApiOperation(value = "抽奖")
     @ApiImplicitParams({

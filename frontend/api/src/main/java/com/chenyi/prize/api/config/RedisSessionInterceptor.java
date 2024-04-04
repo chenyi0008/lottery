@@ -1,6 +1,9 @@
 package com.chenyi.prize.api.config;
 
+import com.chenyi.prize.commons.context.ReqInfoContext;
+import com.chenyi.prize.commons.db.entity.CardUser;
 import com.chenyi.prize.commons.utils.ApiResult;
+import com.chenyi.prize.commons.utils.IpUtil;
 import com.chenyi.prize.commons.utils.RedisUtil;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,16 @@ public class RedisSessionInterceptor implements HandlerInterceptor {
         //无论访问的地址是不是正确的，都进行登录验证，登录成功后的访问再进行分发，404的访问自然会进入到错误控制器中
         HttpSession session = request.getSession();
         if (session!= null && session.getAttribute("user")!=null) {
+            CardUser user = (CardUser)session.getAttribute("user");
+            ReqInfoContext.ReqInfo reqInfo = new ReqInfoContext.ReqInfo();
+            reqInfo.setHost(request.getHeader("host"));
+            reqInfo.setPath(request.getPathInfo());
+            reqInfo.setReferer(request.getHeader("referer"));
+            reqInfo.setUserAgent(request.getHeader("User-Agent"));
+            reqInfo.setClientIp(IpUtil.getClientIp(request));
+            reqInfo.setUser(user);
+            reqInfo.setUserId(user.getId().longValue());
+            ReqInfoContext.addReqInfo(reqInfo);
             return true;
         }else{
             response401(response);

@@ -1,6 +1,7 @@
 package com.chenyi.prize.api.action;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.chenyi.prize.commons.context.ReqInfoContext;
 import com.chenyi.prize.commons.db.entity.CardUser;
 import com.chenyi.prize.commons.db.service.CardUserService;
 import com.chenyi.prize.commons.utils.ApiResult;
