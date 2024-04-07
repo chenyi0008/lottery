@@ -3,6 +3,7 @@ package com.chenyi.prize.commons.aspect;
 import com.chenyi.prize.commons.annotition.limit.Limit;
 import com.chenyi.prize.commons.annotition.limit.LimitType;
 import com.chenyi.prize.commons.context.ReqInfoContext;
+import com.chenyi.prize.commons.utils.RateLimiter;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -21,7 +22,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.sql.Time;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,14 +41,18 @@ public class LimitAspect {
     private static final Logger logger = LoggerFactory.getLogger(LimitAspect.class);
     private static final String PREFIX = "LIMIT_";
     private static String lua;
+    private RateLimiter rateLimiter;
 
-    public LimitAspect(StringRedisTemplate redisTemplate) {
+    public LimitAspect(StringRedisTemplate redisTemplate, RateLimiter rateLimiter) {
         this.redisTemplate = redisTemplate;
+        this.rateLimiter = rateLimiter;
     }
+
 
     @Pointcut("@annotation(com.chenyi.prize.commons.annotition.limit.Limit)")
     public void pointcut() {
     }
+
 
     @Around("pointcut()")
     public Object around(ProceedingJoinPoint point) throws Throwable {
@@ -59,13 +66,19 @@ public class LimitAspect {
         String luaScript = buildLuaScript();
         RedisScript<Long> redisScript = new DefaultRedisScript<>(luaScript, Long.class);
 
-        Long count = redisTemplate.execute(redisScript, keys, String.valueOf(limit.count()), String.valueOf(limit.period()));
-        if (null != count && count.intValue() <= limit.count()) {
-            logger.info("第{}次访问key为 {}，描述为 [{}] 的接口", count, keys, limit.name());
+        Long count = rateLimiter.rateLimit(key, 5000, new Date().getTime(), 3, 100, 10000);
+        if(count != null && count != 0){
             return point.proceed();
-        } else {
+        }else{
             throw new Exception("访问过于频繁");
         }
+//        Long count = redisTemplate.execute(redisScript, keys, String.valueOf(limit.count()), String.valueOf(limit.period()));
+//        if (null != count && count.intValue() <= limit.count()) {
+//            logger.info("第{}次访问key为 {}，描述为 [{}] 的接口", count, keys, limit.name());
+//            return point.proceed();
+//        } else {
+//            throw new Exception("访问过于频繁");
+//        }
     }
 
     private String getCombinKey(Limit limit, Method signatureMethod) {
