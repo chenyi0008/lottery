@@ -24,7 +24,6 @@ public class PrizeGameReceiver {
     public void processMessage(String message) {
 
         logger.info("user play : msg={}" , message);
-        //TODO
         CardUserGame cardUserGame = JSON.parseObject(message, CardUserGame.class);
         boolean save = cardUserGameService.save(cardUserGame);
         if(!save){

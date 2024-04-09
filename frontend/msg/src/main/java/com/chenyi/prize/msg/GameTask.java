@@ -71,12 +71,12 @@ public class GameTask {
             if(game.getType() == 1){
                 // 缓存活动信息
                 redisUtil.set(RedisKeys.INFO + game.getId(), game, -1);
-
+                long duration =game.getEndtime().getTime() - game.getStarttime().getTime();
                 // 缓存活动策略信息
                 List<CardGameRules> rulesList = map.get(game.getId());
                 for (CardGameRules r : rulesList) {
-                    redisUtil.hset(RedisKeys.MAXGOAL + game.getId(), r.getUserlevel() + "", r.getGoalTimes());
-                    redisUtil.hset(RedisKeys.MAXENTER + game.getId(), r.getUserlevel() + "", r.getEnterTimes());
+                    redisUtil.hset(RedisKeys.MAXGOAL + game.getId(), r.getUserlevel() + "", r.getGoalTimes(), duration / 1000 + 5);
+                    redisUtil.hset(RedisKeys.MAXENTER + game.getId(), r.getUserlevel() + "", r.getEnterTimes(), duration / 1000 + 5);
                 }
 
                 // 缓存令牌桶
@@ -88,7 +88,7 @@ public class GameTask {
                 List<Long> tokenList = generateToken(sum, game.getStarttime().getTime(), game.getEndtime().getTime());
                 List<Pair<Long, CardProductDto>> pairList = new ArrayList<>();
                 int idx = 0;
-                long duration =game.getEndtime().getTime() - game.getStarttime().getTime();
+
                 for (CardProductDto item : productList) {
                     for (Integer j = 0; j < item.getAmount(); j++) {
                         pairList.add(new Pair(tokenList.get(idx) , item));
@@ -97,7 +97,9 @@ public class GameTask {
                     }
                 }
                 tokenList.sort(Comparator.comparing(Long::valueOf));
-                redisUtil.rightPushAll(RedisKeys.TOKENS + game.getId(), tokenList);
+                String tokensKey = RedisKeys.TOKENS + game.getId();
+                redisUtil.rightPushAll(tokensKey, tokenList);
+                redisUtil.expire(tokensKey, duration / 1000 + 5);
             }
         }
     }

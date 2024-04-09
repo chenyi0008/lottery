@@ -3,6 +3,7 @@ package com.chenyi.prize.commons.aspect;
 import com.chenyi.prize.commons.annotition.limit.Limit;
 import com.chenyi.prize.commons.annotition.limit.LimitType;
 import com.chenyi.prize.commons.context.ReqInfoContext;
+import com.chenyi.prize.commons.exception.BusinessException;
 import com.chenyi.prize.commons.utils.RateLimiter;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -67,10 +68,16 @@ public class LimitAspect {
         RedisScript<Long> redisScript = new DefaultRedisScript<>(luaScript, Long.class);
 
         Long count = rateLimiter.rateLimit(key, 5000, new Date().getTime(), 3, 100, 10000);
-        if(count != null && count != 0){
+        if(count != null && count != 0 && count != -1){
             return point.proceed();
-        }else{
-            throw new Exception("访问过于频繁");
+        }else if(count == -1){
+//            throw new Exception("账号有异常行为！");
+            throw new BusinessException("账号有异常行为！");
+
+        }
+        else{
+//            throw new Exception("访问过于频繁！");
+            throw new BusinessException("访问过于频繁！");
         }
 //        Long count = redisTemplate.execute(redisScript, keys, String.valueOf(limit.count()), String.valueOf(limit.period()));
 //        if (null != count && count.intValue() <= limit.count()) {

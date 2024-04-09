@@ -15,9 +15,25 @@ local curTime = tonumber(ARGV[2])
 local initTokens = tonumber(ARGV[3])
 local bucketMaxTokens = tonumber(ARGV[4])
 local resetBucketInterval = tonumber(ARGV[5])
+-- 最大失败次数
+local MAX_FAIL_TIMES = 20
+-- 封禁时长
+local BAN_DURATION = 60000
 
 local bucket = redis.call('hgetall', key)
 local currentTokens
+
+-- 限流 判断是否作弊
+local lockKey = "lock:" .. key
+local newValue = redis.call('INCR', lockKey)
+redis.call('EXPIRE', "lock:" .. key, 5000)
+if newValue > MAX_FAIL_TIMES or newValue < -1 then
+-- 用户行为异常 进行封禁
+    redis.call('set', lockKey, -100000)
+    redis.call('EXPIRE', lockKey, BAN_DURATION)
+    return -1
+end
+
 
 -- 若当前桶未初始化,先初始化令牌桶
 if table.maxn(bucket) == 0 then
@@ -99,6 +115,7 @@ assert(currentTokens >= 0)
 -- 如果当前令牌 == 0 ,更新桶内令牌, 返回 0
 if currentTokens == 0 then
     redis.call('hset', key, 'tokensRemaining', currentTokens)
+
     return 0
 else
     -- 如果当前令牌 大于 0, 更新当前桶内的令牌 -1 , 再返回当前桶内令牌数

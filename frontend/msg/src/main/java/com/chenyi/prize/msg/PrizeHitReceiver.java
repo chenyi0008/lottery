@@ -22,7 +22,6 @@ public class PrizeHitReceiver {
     @RabbitHandler
     public void processMessage(String message) {
         logger.info("user hit : message={}", message);
-        //TODO
         CardUserHit cardUserHit = JSON.parseObject(message, CardUserHit.class);
         boolean save = hitService.save(cardUserHit);
         if(!save)logger.warn("RabbitKeys.QUEUE_HIT", " save failed,", cardUserHit.toString());
